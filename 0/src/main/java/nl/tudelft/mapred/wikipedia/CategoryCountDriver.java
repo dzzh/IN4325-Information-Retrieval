@@ -11,6 +11,9 @@ import org.apache.hadoop.util.GenericOptionsParser;
 
 public class CategoryCountDriver {
 
+	private static final String INPUT = "/user/zmicier/gutenberg";
+	private static final String OUTPUT = "/user/zmicier/out0";
+	
     public static void main(String[] args) throws Exception
     {
         Configuration conf = new Configuration();
@@ -21,9 +24,8 @@ public class CategoryCountDriver {
         job.setReducerClass(CategoryCountReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
-        FileInputFormat.addInputPath(job, new Path("/user/claudiahauff/gutenbergBooks/"));
-        FileOutputFormat.setOutputPath(job, new Path("/user/claudiahauff/gutenbergBooks-output2"));
+        FileInputFormat.addInputPath(job, new Path(INPUT));
+        FileOutputFormat.setOutputPath(job, new Path(OUTPUT));
         System.exit(job.waitForCompletion(true) ? 0 : 1);
-
     }
 }
