@@ -3,18 +3,16 @@ package nl.tudelft.mapred.a1;
 import java.io.IOException;
 import java.util.StringTokenizer;
 
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SimpleNormalisationMapper extends Mapper<Object, Text, Text, IntWritable>{
+public class SimpleNormalisationMapper extends Mapper<Object, Text, Text, Text>{
 	
 	private static final String ID_TAG = "id";
 	private static final String TEXT_TAG = "text";
 	
-	private static final IntWritable one = new IntWritable(1);
     private Text word = new Text();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleNormalisationMapper.class);
@@ -31,11 +29,13 @@ public class SimpleNormalisationMapper extends Mapper<Object, Text, Text, IntWri
     		LOGGER.warn("No text was extracted for id " + id);
     	}
     	
+    	Text documentId = new Text(String.valueOf(id));
+    	
         StringTokenizer st = new StringTokenizer(text);
         while(st.hasMoreTokens())
         {
             word.set(st.nextToken());
-            context.write(word,one);
+            context.write(word,documentId);
         }
     }
     
