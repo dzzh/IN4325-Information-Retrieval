@@ -25,7 +25,6 @@ public class SimpleNormalisationMapper extends Mapper<Object, Text, Text, IntWri
     	String stringValue = value.toString();
     	
     	int id = Integer.valueOf(extractContents(stringValue, ID_TAG)).intValue();
-    	LOGGER.info(String.valueOf(id));
     	String text = extractContents(stringValue, TEXT_TAG);
     	if (text.length() == 0){
     		LOGGER.warn("No text was extracted for id " + id);
