@@ -4,12 +4,9 @@ import nl.tudelft.in4325.a1.Constants;
 
 import org.apache.hadoop.io.RawComparator;
 import org.apache.hadoop.io.Text;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class FrequencyComparator implements RawComparator<Text>{
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(FrequencyComparator.class);
 	private static final char separator = Constants.FIELD_SEPARATOR.charAt(0);
 	
 	@Override
