@@ -27,7 +27,7 @@ public class NormalizationReportDriver {
 		
 		Configuration propertiesConfig = null;
 		propertiesConfig = new PropertiesConfiguration(propertiesPath);
-		String input = propertiesConfig.getString("simple-normalization-output");
+		String input = propertiesConfig.getString("normalization-output");
 		String aggregationOutput = propertiesConfig.getString("normalization-report-aggregation-output");
 		String frequencyOutput = propertiesConfig.getString("normalization-report-frequency-output");
 	

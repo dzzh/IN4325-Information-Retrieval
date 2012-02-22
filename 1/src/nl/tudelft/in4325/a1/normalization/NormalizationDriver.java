@@ -12,11 +12,35 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
-public class SimpleNormalizationDriver {
+public class NormalizationDriver {
+
+	private enum NormalizationType{
+		SIMPLE(Constants.Jobs.SIMPLE_NORMALIZATION.toString(), SimpleNormalizationMapper.class), 
+		ADVANCED(Constants.Jobs.ADVANCED_NORMALIZATION.toString(), AdvancedNormalizationMapper.class);
 		
+		NormalizationType(String name, Class<? extends Mapper<Object, Text, Text, IntWritable>> mapper){
+			this.name = name;
+			this.mapper = mapper;
+		}
+		
+		private String name;
+		private Class<? extends Mapper<Object, Text, Text, IntWritable>> mapper;
+		
+		public String getName(){
+			return name;
+		}
+		
+		public Class<? extends Mapper<Object, Text, Text, IntWritable>> getMapper(){
+			return mapper;
+		}
+	}
+	
+	private static final NormalizationType normalizationType = NormalizationType.ADVANCED;
+	
 	public static void main(String[] args) throws Exception{
 
 		//reading input and output paths from configuration file
@@ -29,23 +53,25 @@ public class SimpleNormalizationDriver {
 		Configuration propertiesConfig = null;
 		propertiesConfig = new PropertiesConfiguration(propertiesPath);
 		String input = propertiesConfig.getString("source-input");
-		String output = propertiesConfig.getString("simple-normalization-output");
+		String output;
+		
+		output = propertiesConfig.getString("normalization-output");
 	
 		//configuring Hadoop and running the job
 		org.apache.hadoop.conf.Configuration hadoopConfig = new org.apache.hadoop.conf.Configuration();
 		hadoopConfig.set("xmlinput.start","<page>") ;
 		hadoopConfig.set("xmlinput.end","</page>") ;
 		
-        Job job = new Job(hadoopConfig, Constants.Jobs.SIMPLE_NORMALIZATION.toString());
-        job.setJarByClass(SimpleNormalizationDriver.class);
-        job.setMapperClass(SimpleNormalizationMapper.class);
-        job.setReducerClass(SimpleNormalizationReducer.class);
+        Job job = new Job(hadoopConfig, normalizationType.getName());
+        job.setJarByClass(NormalizationDriver.class);
+        job.setMapperClass(normalizationType.getMapper());
+        job.setReducerClass(NormalizationReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
         job.setInputFormatClass(XmlInputFormat.class);
         
         FileInputFormat.addInputPath(job, new Path(input));
-        Path outputPath = new Path(output); 
+        Path outputPath = new Path(output);
         FileOutputFormat.setOutputPath(job, outputPath);
         
         FileSystem dfs = FileSystem.get(outputPath.toUri(), hadoopConfig);

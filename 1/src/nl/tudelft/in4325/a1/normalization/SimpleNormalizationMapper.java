@@ -47,11 +47,17 @@ public class SimpleNormalizationMapper extends Mapper<Object, Text, Text, IntWri
      * @param tag tag to search with no brackets
      * @return contents inside the tag
      */
-    private String extractContents(String value, String tag){
+    protected String extractContents(String value, String tag){
     	if(value.length() < 100){
     		LOGGER.info(value);
     	}
-    	int start = value.indexOf("<" + tag + ">") + tag.length() + 2;
+    	int start = value.indexOf("<" + tag);
+    	
+    	if (start > -1){
+    		//find matching closing bracket and move start pointer behind it
+    		start = value.indexOf(">", start) + 1;
+    	}
+    	
     	int end = value.indexOf("</" + tag + ">");
     	if (start > -1 && end > -1){
     		return value.substring(start, end);
