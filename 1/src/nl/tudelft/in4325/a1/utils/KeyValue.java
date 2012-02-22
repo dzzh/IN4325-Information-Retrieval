@@ -1,5 +1,8 @@
 package nl.tudelft.in4325.a1.utils;
 
+/**
+ * Simple pair class
+ */
 public class KeyValue {
 
 	private String key;

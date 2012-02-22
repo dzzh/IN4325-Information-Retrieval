@@ -6,6 +6,9 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
+/**
+ * Reducer for Wikipedia XML corpus normalization
+ */
 public class NormalizationReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
 	public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException
     {

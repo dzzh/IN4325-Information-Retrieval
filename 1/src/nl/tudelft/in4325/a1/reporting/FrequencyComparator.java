@@ -5,6 +5,9 @@ import nl.tudelft.in4325.a1.Constants;
 import org.apache.hadoop.io.RawComparator;
 import org.apache.hadoop.io.Text;
 
+/**
+ * Compares two String tokens in format %i:%s where %i is frequency of String %s by frequency  
+ */
 public class FrequencyComparator implements RawComparator<Text>{
 
 	private static final char separator = Constants.FIELD_SEPARATOR.charAt(0);
@@ -17,7 +20,7 @@ public class FrequencyComparator implements RawComparator<Text>{
 	@Override
 	public int compare(byte[] b1, int s1, int l1, byte[] b2, int s2, int l2) {
 		
-		int result =extractFrequency(b2, s2, l2) - extractFrequency(b1, s1, l1);
+		int result = extractFrequency(b2, s2, l2) - extractFrequency(b1, s1, l1);
 		
 		if (result != 0){
 			return result;
@@ -41,6 +44,13 @@ public class FrequencyComparator implements RawComparator<Text>{
 		}
 	}
 
+	/**
+	 * Extracts frequency from string in format %i:%s where %i is frequency of %s occurrence
+	 * @param b byte array with String data
+	 * @param s starting index
+	 * @param l length
+	 * @return positive frequency if found, 0 otherwise  
+	 */
 	private int extractFrequency(byte[] b, int s, int l){
 		
 		boolean hasSeparator = false;

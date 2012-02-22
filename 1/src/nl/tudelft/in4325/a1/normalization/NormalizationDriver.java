@@ -16,8 +16,14 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
+/**
+ * Hadoop job to normalise Wikipedia XML corpus
+ */
 public class NormalizationDriver {
 
+	/**
+	 * Type of normalization. Simple just works with spaces tokenization, advanced uses more complex algorithms.
+	 */
 	private enum NormalizationType{
 		SIMPLE(Constants.Jobs.SIMPLE_NORMALIZATION.toString(), SimpleNormalizationMapper.class), 
 		ADVANCED(Constants.Jobs.ADVANCED_NORMALIZATION.toString(), AdvancedNormalizationMapper.class);
@@ -39,8 +45,14 @@ public class NormalizationDriver {
 		}
 	}
 	
+	//This variable is responsible for normalization to be applied
 	private static final NormalizationType normalizationType = NormalizationType.ADVANCED;
 	
+	/**
+	 * Configures and runs the job with Hadoop
+	 * @param args
+	 * @throws Exception
+	 */
 	public static void main(String[] args) throws Exception{
 
 		//reading input and output paths from configuration file

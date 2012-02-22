@@ -1,5 +1,8 @@
 package nl.tudelft.in4325.a1;
 
+/**
+ * Container for static constants used throughout the code. 
+ */
 public final class Constants {
 	public static final String PROPERTIES_FILE = "conf/conf.ini";
 	public static final String DEFAULT_PROPERTIES_FILE = "conf/conf.default.ini";
@@ -9,6 +12,9 @@ public final class Constants {
 	
 	private Constants(){}
 	
+	/**
+	 *	MapReduce jobs names
+	 */
 	public static enum Jobs{
 		SIMPLE_NORMALIZATION,
 		ADVANCED_NORMALIZATION,
@@ -17,6 +23,9 @@ public final class Constants {
 		INVERTED_INDEXING
 	}
 
+	/**
+	 * Used to identify measurement parameters for normalization analysis 
+	 */
 	public static enum Metrics{
 		UNIQUE_TERM,
 		NON_UNIQUE_TERM,
