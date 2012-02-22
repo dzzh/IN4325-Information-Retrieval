@@ -1,4 +1,4 @@
-package nl.tudelft.mapred.a1;
+package nl.tudelft.in4325.a1.indexing;
 
 import java.io.IOException;
 import java.util.ArrayList;

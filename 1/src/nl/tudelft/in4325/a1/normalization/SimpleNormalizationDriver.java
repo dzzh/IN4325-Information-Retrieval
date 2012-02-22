@@ -1,6 +1,9 @@
-package nl.tudelft.mapred.a1;
+package nl.tudelft.in4325.a1.normalization;
 
 import java.io.File;
+
+import nl.tudelft.in4325.a1.Constants;
+import nl.tudelft.in4325.a1.utils.XmlInputFormat;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -11,43 +14,32 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-//import org.apache.hadoop.util.GenericOptionsParser;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
 
-public class SimpleNormalisationDriver {
-	
-	//private static final Logger LOGGER = LoggerFactory.getLogger(SimpleNormalisationDriver.class);
-	
-	private static final String PROPERTIES_FILE = "conf/conf.ini";
-	private static final String DEFAULT_PROPERTIES_FILE = "conf/conf.default.ini";
-	private static final String JOB = "WordCount";
-	
+public class SimpleNormalizationDriver {
+		
 	public static void main(String[] args) throws Exception{
 
 		//reading input and output paths from configuration file
-		String propertiesPath = DEFAULT_PROPERTIES_FILE;
+		String propertiesPath = Constants.DEFAULT_PROPERTIES_FILE;
 		
-		if (new File(PROPERTIES_FILE).exists()){
-			propertiesPath = PROPERTIES_FILE;
+		if (new File(Constants.PROPERTIES_FILE).exists()){
+			propertiesPath = Constants.PROPERTIES_FILE;
 		}
 		
 		Configuration propertiesConfig = null;
 		propertiesConfig = new PropertiesConfiguration(propertiesPath);
-		String input = propertiesConfig.getString("input");
-		String output = propertiesConfig.getString("output");
+		String input = propertiesConfig.getString("source-input");
+		String output = propertiesConfig.getString("simple-normalization-output");
 	
 		//configuring Hadoop and running the job
 		org.apache.hadoop.conf.Configuration hadoopConfig = new org.apache.hadoop.conf.Configuration();
 		hadoopConfig.set("xmlinput.start","<page>") ;
 		hadoopConfig.set("xmlinput.end","</page>") ;
 		
-        //String[] otherArgs = new GenericOptionsParser(hadoopConfig,args).getRemainingArgs();
-        
-        Job job = new Job(hadoopConfig, JOB);
-        job.setJarByClass(SimpleNormalisationDriver.class);
-        job.setMapperClass(SimpleNormalisationMapper.class);
-        job.setReducerClass(SimpleNormalisationReducer.class);
+        Job job = new Job(hadoopConfig, Constants.Jobs.SIMPLE_NORMALIZATION.toString());
+        job.setJarByClass(SimpleNormalizationDriver.class);
+        job.setMapperClass(SimpleNormalizationMapper.class);
+        job.setReducerClass(SimpleNormalizationReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
         job.setInputFormatClass(XmlInputFormat.class);
