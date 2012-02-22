@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
-import org.apache.hadoop.util.StringUtils;
 
 /**
  * Builds document-level inverted index file based on (word, document id) pairs.
@@ -25,7 +25,7 @@ public class DocLevelIndexReducer extends Reducer<Text, Text, Text, Text> {
 		//The document ids arrive in random order and they have to be sorted.
 		Collections.sort(toReturn);
 		
-		context.write(key, new Text(StringUtils.join("|", toReturn)));
+		context.write(key, new Text(StringUtils.join(toReturn, "|")));
 	}
 
 }
