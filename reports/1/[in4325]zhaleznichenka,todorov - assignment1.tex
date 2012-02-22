@@ -12,4 +12,18 @@
 
 \end{description}
 
+\section{Inverted index}
+In this assignment we build two inverted indices: one document-level inverted file and one word-level inverted file.
+
+\subsection{Document-level inverted index}
+In order to build this index file we use the parsed and normalized terms described in the previous section. This index maps the terms with the IDs of the pages that they occur in. The logic is distributed in the following components.
+
+\begin{itemize}
+	\item Job - 
+	\item Mapper - Parses and normalizes the terms from the corpus. It produces pairs which map a term with the ID of the page it occurs in.
+	\item Reducer - Builds the an index entry for each term based on the pairs provided by the mapper. Each entry in the inverted index file consists of the term and a collection of the IDs of the pages where this term occurs.  
+\end{itemize}
+
+\subsection{Document-level inverted index}
+
 \end{document}
