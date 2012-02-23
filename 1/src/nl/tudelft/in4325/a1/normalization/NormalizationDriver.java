@@ -10,7 +10,6 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -96,7 +95,7 @@ public class NormalizationDriver {
         job.setMapperClass(normalizationType.getMapper());
         job.setReducerClass(NormalizationReducer.class);
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(IntWritable.class);
+        job.setOutputValueClass(TextArrayWritable.class);
         job.setInputFormatClass(XmlInputFormat.class);
         
         FileInputFormat.addInputPath(job, new Path(input));
