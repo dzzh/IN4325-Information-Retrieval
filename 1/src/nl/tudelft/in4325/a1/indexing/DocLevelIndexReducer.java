@@ -13,13 +13,15 @@ import org.apache.hadoop.mapreduce.Reducer;
  * Builds document-level inverted index file based on (word, document id) pairs.
  *
  */
-public class DocLevelIndexReducer extends Reducer<Text, Text, Text, Text> {
-	public void reduce(Text key, Iterable<Text> values, Context context)
+public class DocLevelIndexReducer extends Reducer<Text, TextArrayWritable, Text, Text> {
+	public void reduce(Text key, Iterable<TextArrayWritable> values, Context context)
 			throws IOException, InterruptedException {
 
-		List<String> toReturn = new ArrayList<String>();
+		List<Integer> toReturn = new ArrayList<Integer>();
 		while (values.iterator().hasNext()) {
-			toReturn.add(values.iterator().next().toString());
+			//we are only interested in the pageID. The possitions are ignored.
+			Text pageID  = (Text) ((TextArrayWritable)values.iterator().next()).get()[0];
+			toReturn.add(Integer.valueOf(pageID.toString()));
 		}
 		
 		//The document ids arrive in random order and they have to be sorted.

@@ -3,6 +3,7 @@ package nl.tudelft.in4325.a1.normalization;
 import java.io.File;
 
 import nl.tudelft.in4325.a1.Constants;
+import nl.tudelft.in4325.a1.indexing.TextArrayWritable;
 import nl.tudelft.in4325.a1.utils.XmlInputFormat;
 
 import org.apache.commons.configuration.Configuration;
@@ -32,19 +33,19 @@ public class NormalizationDriver {
 		SIMPLE(Constants.Jobs.SIMPLE_NORMALIZATION.toString(), SimpleNormalizationMapper.class), 
 		ADVANCED(Constants.Jobs.ADVANCED_NORMALIZATION.toString(), AdvancedNormalizationMapper.class);
 		
-		NormalizationType(String name, Class<? extends Mapper<Object, Text, Text, IntWritable>> mapper){
+		NormalizationType(String name, Class<? extends Mapper<Object, Text, Text, TextArrayWritable>> mapper){
 			this.name = name;
 			this.mapper = mapper;
 		}
 		
 		private String name;
-		private Class<? extends Mapper<Object, Text, Text, IntWritable>> mapper;
+		private Class<? extends Mapper<Object, Text, Text, TextArrayWritable>> mapper;
 		
 		public String getName(){
 			return name;
 		}
 		
-		public Class<? extends Mapper<Object, Text, Text, IntWritable>> getMapper(){
+		public Class<? extends Mapper<Object, Text, Text, TextArrayWritable>> getMapper(){
 			return mapper;
 		}
 		

@@ -1,18 +1,25 @@
 package nl.tudelft.in4325.a1.normalization;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.apache.hadoop.io.IntWritable;
+import nl.tudelft.in4325.a1.indexing.TextArrayWritable;
+
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Normalizes corpus of XML documents with tokenization according to white spaces.
  */
-public class SimpleNormalizationMapper extends Mapper<Object, Text, Text, IntWritable>{
+public class SimpleNormalizationMapper extends Mapper<Object, Text, Text, TextArrayWritable>{
 	
 	private static final String ID_TAG = "id";
 	private static final String TEXT_TAG = "text";
@@ -33,11 +40,32 @@ public class SimpleNormalizationMapper extends Mapper<Object, Text, Text, IntWri
     	
     	//normalization and output
         StringTokenizer st = new StringTokenizer(text);
+        int positionCounter = 0;
+		Map<String, List<String>> wordPossitions = new HashMap<String, List<String>>();
+		
         while(st.hasMoreTokens())
         {
-            word.set(st.nextToken());
-            context.write(word, new IntWritable(id));
+        	String word = st.nextToken();
+			if (!wordPossitions.containsKey(word)) {
+				wordPossitions.put(word, new ArrayList<String>());
+			}
+
+			wordPossitions.get(word).add(String.valueOf(positionCounter));
+			
+            positionCounter++;
         }
+        
+        for (String term : wordPossitions.keySet()) {
+			Writable[] tuples = {
+					new Text(String.valueOf(id)),
+					new Text("[ "
+							+ StringUtils.join(",", wordPossitions.get(term)
+									.toArray(new String[0])) + " ]") };
+			TextArrayWritable writableArrayWritable = new TextArrayWritable();
+			writableArrayWritable.set(tuples);
+			word.set(term);
+			context.write(word, writableArrayWritable);
+		}
     }
     
     /**
