@@ -2,7 +2,6 @@ package nl.tudelft.in4325.a1.indexing;
 
 import java.io.File;
 
-import nl.tudelft.in4325.a1.normalization.AdvancedNormalizationMapper;
 import nl.tudelft.in4325.a1.utils.XmlInputFormat;
 
 import org.apache.commons.configuration.Configuration;
@@ -45,7 +44,7 @@ public class WordLevelIndexDriver {
         
         Job job = new Job(hadoopConfig, JOB);
         job.setJarByClass(WordLevelIndexDriver.class);
-        job.setMapperClass(AdvancedNormalizationMapper.class);
+        job.setMapperClass(IndexingAdvancedNormalizationMapper.class);
         job.setReducerClass(WordLevelIndexReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(TextArrayWritable.class);
