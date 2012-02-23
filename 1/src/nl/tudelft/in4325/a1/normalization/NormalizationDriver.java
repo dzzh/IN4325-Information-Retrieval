@@ -19,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Hadoop job to normalise Wikipedia XML corpus
+ * Hadoop job to normalize Wikipedia XML corpus
  */
 public class NormalizationDriver {
 

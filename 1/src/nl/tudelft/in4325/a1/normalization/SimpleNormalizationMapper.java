@@ -41,24 +41,24 @@ public class SimpleNormalizationMapper extends Mapper<Object, Text, Text, TextAr
     	//normalization and output
         StringTokenizer st = new StringTokenizer(text);
         int positionCounter = 0;
-		Map<String, List<String>> wordPossitions = new HashMap<String, List<String>>();
+		Map<String, List<String>> wordPositions = new HashMap<String, List<String>>();
 		
         while(st.hasMoreTokens())
         {
         	String word = st.nextToken();
-			if (!wordPossitions.containsKey(word)) {
-				wordPossitions.put(word, new ArrayList<String>());
+			if (!wordPositions.containsKey(word)) {
+				wordPositions.put(word, new ArrayList<String>());
 			}
 
-			wordPossitions.get(word).add(String.valueOf(positionCounter));
+			wordPositions.get(word).add(String.valueOf(positionCounter));
 			
             positionCounter++;
         }
         
-        for (String term : wordPossitions.keySet()) {
+        for (String term : wordPositions.keySet()) {
 			Writable[] tuples = {
 					new Text(String.valueOf(id)),
-					new Text("[ " + StringUtils.join(wordPossitions.get(term).toArray(new String[0]), ",") + " ]") };
+					new Text("[ " + StringUtils.join(wordPositions.get(term).toArray(new String[0]), ",") + " ]") };
 			TextArrayWritable writableArrayWritable = new TextArrayWritable();
 			writableArrayWritable.set(tuples);
 			word.set(term);
