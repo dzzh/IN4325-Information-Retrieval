@@ -6,15 +6,20 @@ import info.bliki.wiki.model.WikiModel;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import nl.tudelft.in4325.a1.Constants;
+import nl.tudelft.in4325.a1.indexing.TextArrayWritable;
 
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.util.StringUtils;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,6 +81,9 @@ public class AdvancedNormalizationMapper extends SimpleNormalizationMapper{
         plainText = removeMarkup(plainText);
         
         StringTokenizer st = new StringTokenizer(plainText, " \t\n\r\f\\/");
+        int positionCounter = 0;
+		Map<String, List<String>> wordPossitions = new HashMap<String, List<String>>();
+		
         while(st.hasMoreTokens())
         {
         	String token = st.nextToken();
@@ -87,10 +95,29 @@ public class AdvancedNormalizationMapper extends SimpleNormalizationMapper{
         		//Applying Porter2 stemming algorithm and emit results
         		stemmer.setCurrent(token);
         		stemmer.stem();
-		        word.set(stemmer.getCurrent());
-		        context.write(word, new IntWritable(id));
+		        String word = stemmer.getCurrent();
+				if (!wordPossitions.containsKey(word)) {
+					wordPossitions.put(word, new ArrayList<String>());
+				}
+
+				wordPossitions.get(word).add(String.valueOf(positionCounter));
 	        }
+        	
+        	positionCounter++;
         }
+        
+        for (String term : wordPossitions.keySet()) {
+			Writable[] tuples = {
+					new Text(String.valueOf(id)),
+					new Text("[ "
+							+ StringUtils.join(",", wordPossitions.get(term)
+									.toArray(new String[0])) + " ]") };
+			TextArrayWritable writableArrayWritable = new TextArrayWritable();
+			writableArrayWritable.set(tuples);
+			word.set(term);
+			context.write(word, writableArrayWritable);
+		}
+        
     }
     
     /**
