@@ -21,17 +21,17 @@ Organisation of HDFS folders is described in \emph{conf/conf.default.ini} config
 
 You can find source code responsible for normalisation part in package \lstinline{nl.tudelft.in4325.a1.normalization}. Source code responsible for report generation is presented in \lstinline{nl.tudelft.in4325.a1.reporting}.
 
-For both types of normalisation (simple and advanced) same input and output formats were used. To switch between normalisation types, you have to adjust \lstinline{normalization-type} value in configuration file. Normalisation mapper accepts contents of \lstinline{<page>} tag and returns set of pairs (token; document id). Reducer accepts these values and groups them by frequencies thus returning set of pairs in form of (token; frequency).
+For both types of normalisation (simple and advanced) same input and output formats were used. To switch between normalisation types, one has to adjust \lstinline{normalization-type} value in configuration file. Normalisation mapper accepts contents of \lstinline{<page>} tag and returns set of pairs (token; document id). Reducer accepts these values and groups them by frequencies thus returning set of pairs in form of (token; frequency).
 
-Simple normalisation mapper just tokenises the input according to white spaces. Advanced mapper lowers case for the text, removes Wikipedia and HTML markups, tokenises the resulting text, validates the tokens against a list of stop words and applies Porter2 stemming algorithm to the valid tokens. Only valid stemmed tokens are returned.
+Simple normalisation mapper just tokenises the input according to white spaces. Advanced mapper lowers case for the text, removes Wikipedia and HTML markups, tokenises the resulting text, validates the tokens against a list of stop words and applies Porter2 stemming algorithm to the valid tokens. Only valid stemmed tokens with the respective document ids are returned.
 
-We used a list of language abbreviations as a list of stop words. We did not check for direct correspondence between token and language abbreviation but rather skipped all the tokens starting with such abbreviations. This helped to avoid many non-English terms following the abbreviations in links referencing same Wikipedia pages in different languages but not having any value for processing English corpus. Also, we skipped the Wikipedia categories and system Wikipedia tags in double (triple) curly braces.
+We used a list of language abbreviations as stop words. We did not check for direct correspondence between token and language abbreviation but rather skipped all the tokens starting with such abbreviations. This helped to avoid many non-English terms following the abbreviations in links referencing same Wikipedia pages in different languages but not having any value for processing English corpus. Also, we skipped the Wikipedia categories and system Wikipedia tags in double (triple) curly braces.
 
 \section{Corpora reports}
 
 To generate the reports for normalisation phase, we used two different mappers and one reducer. \lstinline{NormalizationReportAggregationMapper} class was written to generate aggregated values based on the output of normalisation job. Per each (token; frequency) pair retrieved from normaliser, we generated in a new mapper two pairs: (UNIQUE\_TERM; 1) to compute number of unique terms and (NON\_UNIQUE\_TERM; frequency) to compute total number of terms. Also, for terms with frequency 1 we generated third pair (OCCURRING\_ONCE, 1) to compute number of terms with frequency one. A simple reducer summarised the values and we got just three distinct key-value pairs with needed data. Percentage of terms, appearing only once, was computed manually. However, this can also be done with Unix command-line tools or using chaining mappers in Hadoop.
 
-To find most frequent terms, we wrote \lstinline{NormalizationReportFrequencyMapper} class which generated pairs in form (frequency:term; frequency) from the output of normaliser. As it is impossible to sort by values in Hadoop, we had to add frequency values to keys and write a separate partitioner and comparator. As a result we got a list of (frequency:term; frequency) pairs, ordered by frequency in descending order and have chosen five first pairs out of it.
+To find most frequent terms, we wrote \lstinline{NormalizationReportFrequencyMapper} class which generated pairs in form (frequency:term; frequency) from the output of normaliser. As it is impossible to sort by values in Hadoop, we had to add frequency values to keys and write a separate partitioner and comparator. As a result we got a list of (frequency:term; frequency) pairs, ordered by frequency in descending order and have chosen five first pairs out of it. For this job, no reducer was needed.
 
 After comparison of results we see that advanced mapper provides with less noise in results (and generates almost twice as less data) which is definitely better for processing. However, the better normalisation algorithms are, the more computing time they need.  
 
@@ -51,25 +51,25 @@ Percentage of terms, appearing only once: 83\\
 Five most frequent terms: \emph{the} (135064), \emph{of} (74043), \emph{and} (55051), \emph{in} (49995), \emph{a} (48859).
 
 \section{Inverted index}
-In this assignment we build two inverted indices: one document-level inverted file and one word-level inverted file.
+In this assignment we have built two inverted indices: one document-level inverted file and one word-level inverted file.
 
 \subsection{Document-level inverted index}
-In order to build this index file we use the parsed and normalised terms described in the previous section. This index maps the terms with the IDs of the pages where they occur. The logic is distributed in the following components.
+In order to build this index file we use the parsed and normalised terms described in the previous section. This index maps the terms with the ids of the pages where they occur. The logic is distributed in the following components.
 
 \begin{itemize}
-	\item Job (DocLevelIndexDriver) - Configures and submits the job that is responsible for building the index.
-	\item Mapper (AdvancedNormalizationMapper) - Parses and normalizes the terms from the corpus. It produces pairs which map a term with the ID of the page it occurs in.
-	\item Reducer (DocLevelIndexReducer) - Builds the an index entry for each term based on the pairs provided by the mapper. Each entry in the inverted index file consists of the term and a collection of the IDs of the pages where this term occurs.  
+	\item Job (\lstinline{DocLevelIndexDriver}) - Configures and submits the job that is responsible for building the index.
+	\item Mapper (\lstinline{AdvancedNormalizationMapper}) - Parses and normalises the terms from the corpus. It produces pairs which map a term with the ID of the page it occurs in.
+	\item Reducer (\lstinline{DocLevelIndexReducer}) - Builds the an index entry for each term based on the pairs provided by the mapper. Each entry in the inverted index file consists of the term and a collection of the ids of the pages where this term occurs.  
 \end{itemize}
 
 The size of the resulted index file is around \emph{16 MB}.
-\subsection{Document-level inverted index}
-This index file is also built on top of the parsed and normalized terms described in the previous section. It maps the terms with the IDs of the pages where they occur and also provides information about the exact positions of the terms within the page's text. The logic is distributed in the following components.
+\subsection{Word-level inverted index}
+This index file is also built on top of the parsed and normalised terms described in the previous section. It maps the terms with the ids of the pages where they occur and also provides information about the exact positions of the terms within the text of Wikipedia article. The logic is distributed in the following components.
 
 \begin{itemize}
-	\item Job (WordLevelIndexDriver) - Configures and submits the job that is responsible for building the index.
-	\item Mapper (AdvancedNormalizationMapper) - Parses and normalizes the terms from the corpus. It produces pairs which map a term with the ID of the page it occurs in and the positions of the term within the page.
-	\item Reducer (WordLevelIndexReducer) - Builds an index entry for each term based on the information provided by the mapper. Each entry in the inverted index file consists of the term and a collection of entries that contain the IDs of the pages where this term occurs and the positions of the term within each page.  
+	\item Job (\lstinline{WordLevelIndexDriver}) - Configures and submits the job that is responsible for building the index.
+	\item Mapper (\lstinline{AdvancedNormalizationMapper}) - Parses and normalises the terms from the corpus. It produces pairs which map a term with the ID of the page it occurs in and the positions of the term within the page.
+	\item Reducer (\lstinline{WordLevelIndexReducer}) - Builds an index entry for each term based on the information provided by the mapper. Each entry in the inverted index file consists of the term and a collection of entries that contain the IDs of the pages where this term occurs and the positions of the term within each page.  
 \end{itemize}
 
 The size of the resulted index file is around \emph{40 MB}.
