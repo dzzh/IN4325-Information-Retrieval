@@ -9,6 +9,9 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
+/**
+ * Mapper to sort tokens in decreasing order of frequencies
+ */
 public class NormalizationReportFrequencyMapper extends Mapper<Object, Text, Text, IntWritable>{
 
 	private Text word = new Text();

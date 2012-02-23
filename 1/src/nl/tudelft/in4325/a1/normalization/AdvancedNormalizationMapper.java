@@ -33,21 +33,24 @@ public class AdvancedNormalizationMapper extends SimpleNormalizationMapper{
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(AdvancedNormalizationMapper.class);
 	
+	//used to extract document id and contents from Wikipedia XML
 	private static final String ID_TAG = "id";
 	private static final String TEXT_TAG = "text";
 
     private Text word = new Text();
     
-    //Class to help with removing Wiki formating
+    //Third-party library to remove Wikipedia formatting
     private WikiModel wikiModel = new WikiModel("http://www.mywiki.com/wiki/${image}", "http://www.mywiki.com/wiki/${title}");
     
-    //List of stopwords not to process
+    //List of stop words not to process
     private List<String> stopWords = readStopWords();
     
     //Porter2 stemmer for English
     private SnowballStemmer stemmer = new englishStemmer();
     
+    //Symbols allowed in tokens, apart from letters, digits and white spaces
     private String allowedSymbols = "%-_";
+    
     String curlyBraces = "{}";
 	char leftBrace = curlyBraces.charAt(0);
 	char rightBrace = curlyBraces.charAt(1);
@@ -69,8 +72,6 @@ public class AdvancedNormalizationMapper extends SimpleNormalizationMapper{
     	
     	text = text.toLowerCase(Locale.ENGLISH);
     	
-    	//normalization and output
-    	
     	//removing Wikipedia formatting
         String plainText = wikiModel.render(new PlainTextConverter(), text);
         
@@ -90,8 +91,8 @@ public class AdvancedNormalizationMapper extends SimpleNormalizationMapper{
         	
             //removing noise symbols (leaving alpha plus couple of others)	 
             token = removeNonAlphaNumericSymbols(token);
+            
         	if (isTokenValid(token)){
-        		
         		//Applying Porter2 stemming algorithm and emit results
         		stemmer.setCurrent(token);
         		stemmer.stem();
@@ -205,6 +206,7 @@ public class AdvancedNormalizationMapper extends SimpleNormalizationMapper{
     	StringBuffer sb = new StringBuffer();
     	int braces = 0;
     	
+    	//removes any content between two or more consequent pairs of curly braces and the braces themselves 
     	for (int i = 1; i < text.length(); i++){
     		char current = text.charAt(i);
     		char previous = text.charAt(i-1);

@@ -14,6 +14,9 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
+/**
+ * Runs two Hadoop jobs to analyze aggregation and term frequency data for Wikipedia corpus.
+ */
 public class NormalizationReportDriver {
 		
 	public static void main(String[] args) throws Exception{

@@ -9,6 +9,10 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
+/**
+ * Mapper to retrieve aggregated values from normalized Wikipedia corpus
+ *
+ */
 public class NormalizationReportAggregationMapper extends Mapper<Object, Text, Text, IntWritable>{
 
 	private Text word = new Text();
@@ -31,6 +35,11 @@ public class NormalizationReportAggregationMapper extends Mapper<Object, Text, T
 		}
 	}
 	
+	/**
+	 * Parses line in form %s\t%i with token %s of frequency %i. Token becomes key, frequency becomes value.
+	 * @param line one token
+	 * @return parsed token
+	 */
 	protected static KeyValue parseLine(String line){
 		int separatorIndex = line.lastIndexOf("\t");
 		String key = line.substring(0,separatorIndex);

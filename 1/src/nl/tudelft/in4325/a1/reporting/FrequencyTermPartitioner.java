@@ -8,6 +8,9 @@ import org.apache.hadoop.mapreduce.Partitioner;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 
+/**
+ * Partitions tokens in form %i:%s by %s.
+ */
 public class FrequencyTermPartitioner extends Partitioner<Text, IntWritable> {
 
 	//private static final Logger LOGGER = LoggerFactory.getLogger(FrequencyTermPartitioner.class);

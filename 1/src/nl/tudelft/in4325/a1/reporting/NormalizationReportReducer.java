@@ -8,6 +8,9 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
+/**
+ * Reducer to generate report from normalized Wikipedia corpus
+ */
 public class NormalizationReportReducer extends Reducer<Text, IntWritable, Text, IntWritable>{
 	
 	private Text word = new Text();
