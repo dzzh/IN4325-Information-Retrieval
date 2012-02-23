@@ -12,7 +12,7 @@ import nl.tudelft.in4325.a1.indexing.TextArrayWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.util.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,9 +58,7 @@ public class SimpleNormalizationMapper extends Mapper<Object, Text, Text, TextAr
         for (String term : wordPossitions.keySet()) {
 			Writable[] tuples = {
 					new Text(String.valueOf(id)),
-					new Text("[ "
-							+ StringUtils.join(",", wordPossitions.get(term)
-									.toArray(new String[0])) + " ]") };
+					new Text("[ " + StringUtils.join(wordPossitions.get(term).toArray(new String[0]), ",") + " ]") };
 			TextArrayWritable writableArrayWritable = new TextArrayWritable();
 			writableArrayWritable.set(tuples);
 			word.set(term);

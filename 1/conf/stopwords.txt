@@ -154,8 +154,8 @@ stq:
 sq:i
 scn:
 si:
-ss:I-Irani
-sk:Ir‡n
+ss:
+sk:
 sl:
 szl:
 so:
