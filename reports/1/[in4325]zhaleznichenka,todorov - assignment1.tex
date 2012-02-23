@@ -33,7 +33,7 @@ To generate the reports for normalisation phase, we used two different mappers a
 
 To find most frequent terms, we wrote \lstinline{NormalizationReportFrequencyMapper} class which generated pairs in form (frequency:term; frequency) from the output of normaliser. As it is impossible to sort by values in Hadoop, we had to add frequency values to keys and write a separate partitioner and comparator. As a result we got a list of (frequency:term; frequency) pairs, ordered by frequency in descending order and have chosen five first pairs out of it.
 
-After comparison of results we see that advanced mapper provides with less noise in results which is definitely better for processing. However, the better normalisation algorithms are, the more computing time they need.  
+After comparison of results we see that advanced mapper provides with less noise in results (and generates almost twice as less data) which is definitely better for processing. However, the better normalisation algorithms are, the more computing time they need.  
 
 \subsection{Corpora report for simple normalisation}
 
