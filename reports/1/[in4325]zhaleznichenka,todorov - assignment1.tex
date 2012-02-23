@@ -16,21 +16,24 @@
 In this assignment we build two inverted indices: one document-level inverted file and one word-level inverted file.
 
 \subsection{Document-level inverted index}
-In order to build this index file we use the parsed and normalized terms described in the previous section. This index maps the terms with the IDs of the pages that they occur in. The logic is distributed in the following components.
+In order to build this index file we use the parsed and normalized terms described in the previous section. This index maps the terms with the IDs of the pages where they occur. The logic is distributed in the following components.
 
 \begin{itemize}
-	\item Job - Configures and submits the job that is responsible for building the index.
-	\item Mapper - Parses and normalizes the terms from the corpus. It produces pairs which map a term with the ID of the page it occurs in.
-	\item Reducer - Builds the an index entry for each term based on the pairs provided by the mapper. Each entry in the inverted index file consists of the term and a collection of the IDs of the pages where this term occurs.  
+	\item Job (DocLevelIndexDriver) - Configures and submits the job that is responsible for building the index.
+	\item Mapper (AdvancedNormalizationMapper) - Parses and normalizes the terms from the corpus. It produces pairs which map a term with the ID of the page it occurs in.
+	\item Reducer (DocLevelIndexReducer) - Builds the an index entry for each term based on the pairs provided by the mapper. Each entry in the inverted index file consists of the term and a collection of the IDs of the pages where this term occurs.  
 \end{itemize}
 
+The size of the resulted index file is around \emph{16 MB}.
 \subsection{Document-level inverted index}
-This index file is also built on top of the parsed and normalized terms described in the previous section. This index maps the terms with the IDs of the pages that they occur in and also provides information about the exact positions of the terms within the page's text. The logic is distributed in the following components.
+This index file is also built on top of the parsed and normalized terms described in the previous section. It maps the terms with the IDs of the pages where they occur and also provides information about the exact positions of the terms within the page's text. The logic is distributed in the following components.
 
 \begin{itemize}
-	\item Job - Configures and submits the job that is responsible for building the index.
-	\item Mapper - Parses and normalizes the terms from the corpus. It produces pairs which map a term with the ID of the page it occurs in and the positions of the term within the page.
-	\item Reducer - Builds an index entry for each term based on the information provided by the mapper. Each entry in the inverted index file consists of the term and a collection of entries that contain the IDs of the pages where this term occurs and the positions of the term within each page.  
+	\item Job (WordLevelIndexDriver) - Configures and submits the job that is responsible for building the index.
+	\item Mapper (AdvancedNormalizationMapper) - Parses and normalizes the terms from the corpus. It produces pairs which map a term with the ID of the page it occurs in and the positions of the term within the page.
+	\item Reducer (WordLevelIndexReducer) - Builds an index entry for each term based on the information provided by the mapper. Each entry in the inverted index file consists of the term and a collection of entries that contain the IDs of the pages where this term occurs and the positions of the term within each page.  
 \end{itemize}
+
+The size of the resulted index file is around \emph{40 MB}.
 
 \end{document}
