@@ -1,22 +1,60 @@
 \documentclass[a4paper, notitlepage]{report}
-\usepackage{fullpage, algorithmic, algorithm}
+\usepackage{fullpage, listings, courier}
+\lstset{language=Java,basicstyle=\small\ttfamily,commentstyle=\color{Gray},tabsize=4}
+
 \begin{document}
 
 \title{IN4325 Information Retrieval, assignment 1}
-\author{Zmitser Zhaleznichenka (4134575) and Borislav Todorov (4181840)}
+\author{Borislav Todorov (4181840) and Zmitser Zhaleznichenka (4134575)}
 \date{\today}
 \maketitle
 
-\begin{description}
-\item[1] \hfill
+\section{Setup}
 
-\end{description}
+Submitted source code is compatible with Hadoop 0.20.2. To parse input data, \lstinline{XmlInputFormat} was used. However, the suggested version caused problems because of incompatibility with our Hadoop distribution and we had to substitute it with a compatible one\footnote{http://xmlandhadoop.blogspot.com}.
+
+To support our algorithms, we have used the following third-party libraries: Apache Commons\footnote{http://commons.apache.org} Lang and Apache Commons Configuration for basic setup, Java Wikipedia API\footnote{http://code.google.com/p/gwtwiki/} to remove Wikipedia markup from processed texts, Jsoup\footnote{http://jsoup.org/} to remove HTML markup and a reference implementation of Porter2 stemming algorithm\footnote{http://snowball.tartarus.org/dist/libstemmer\_java.tgz}.
+
+Organisation of HDFS folders is described in \emph{conf/conf.default.ini} configuration file.
+
+\section{Normalisation}
+
+You can find source code responsible for normalisation part in package \lstinline{nl.tudelft.in4325.a1.normalization}. Source code responsible for report generation is presented in \lstinline{nl.tudelft.in4325.a1.reporting}.
+
+For both types of normalisation (simple and advanced) same input and output formats were used. To switch between normalisation types, you have to adjust \lstinline{normalization-type} value in configuration file. Normalisation mapper accepts contents of \lstinline{<page>} tag and returns set of pairs (token; document id). Reducer accepts these values and groups them by frequencies thus returning set of pairs in form of (token; frequency).
+
+Simple normalisation mapper just tokenises the input according to white spaces. Advanced mapper lowers case for the text, removes Wikipedia and HTML markups, tokenises the resulting text, validates the tokens against a list of stop words and applies Porter2 stemming algorithm to the valid tokens. Only valid stemmed tokens are returned.
+
+We used a list of language abbreviations as a list of stop words. We did not check for direct correspondence between token and language abbreviation but rather skipped all the tokens starting with such abbreviations. This helped to avoid many non-English terms following the abbreviations in links referencing same Wikipedia pages in different languages but not having any value for processing English corpus. Also, we skipped the Wikipedia categories and system Wikipedia tags in double (triple) curly braces.
+
+\section{Corpora reports}
+
+To generate the reports for normalisation phase, we used two different mappers and one reducer. \lstinline{NormalizationReportAggregationMapper} class was written to generate aggregated values based on the output of normalisation job. Per each (token; frequency) pair retrieved from normaliser, we generated in a new mapper two pairs: (UNIQUE\_TERM; 1) to compute number of unique terms and (NON\_UNIQUE\_TERM; frequency) to compute total number of terms. Also, for terms with frequency 1 we generated third pair (OCCURRING\_ONCE, 1) to compute number of terms with frequency one. A simple reducer summarised the values and we got just three distinct key-value pairs with needed data. Percentage of terms, appearing only once, was computed manually. However, this can also be done with Unix command-line tools or using chaining mappers in Hadoop.
+
+To find most frequent terms, we wrote \lstinline{NormalizationReportFrequencyMapper} class which generated pairs in form (frequency:term; frequency) from the output of normaliser. As it is impossible to sort by values in Hadoop, we had to add frequency values to keys and write a separate partitioner and comparator. As a result we got a list of (frequency:term; frequency) pairs, ordered by frequency in descending order and have chosen five first pairs out of it.
+
+After comparison of results we see that advanced mapper provides with less noise in results which is definitely better for processing. However, the better normalisation algorithms are, the more computing time they need.  
+
+\subsection{Corpora report for simple normalisation}
+
+Number of terms: 4027509\\
+Number of unique terms: 907501\\
+Percentage of terms, appearing only once: 81\\
+Five most frequent terms: \emph{the} (118075), \emph{of} (86236), \emph{*} (70916), \emph{and} (58190), \emph{in} (48095).
+
+
+\subsection{Corpora report for advanced normalisation}
+
+Number of terms: 3344890\\
+Number of unique terms: 567656\\
+Percentage of terms, appearing only once: 83\\
+Five most frequent terms: \emph{the} (135064), \emph{of} (74043), \emph{and} (55051), \emph{in} (49995), \emph{a} (48859).
 
 \section{Inverted index}
 In this assignment we build two inverted indices: one document-level inverted file and one word-level inverted file.
 
 \subsection{Document-level inverted index}
-In order to build this index file we use the parsed and normalized terms described in the previous section. This index maps the terms with the IDs of the pages that they occur in. The logic is distributed in the following components.
+In order to build this index file we use the parsed and normalised terms described in the previous section. This index maps the terms with the IDs of the pages that they occur in. The logic is distributed in the following components.
 
 \begin{itemize}
 	\item Job - Configures and submits the job that is responsible for building the index.

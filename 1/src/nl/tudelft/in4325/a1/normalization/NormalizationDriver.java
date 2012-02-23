@@ -15,12 +15,16 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Hadoop job to normalise Wikipedia XML corpus
  */
 public class NormalizationDriver {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(NormalizationDriver.class);
+	
 	/**
 	 * Type of normalization. Simple just works with spaces tokenization, advanced uses more complex algorithms.
 	 */
@@ -43,10 +47,18 @@ public class NormalizationDriver {
 		public Class<? extends Mapper<Object, Text, Text, IntWritable>> getMapper(){
 			return mapper;
 		}
+		
+		public static NormalizationType getNormalizationType(String type){
+			if (type.equalsIgnoreCase("simple")){
+				return NormalizationType.SIMPLE;
+			} else if (type.equalsIgnoreCase("advanced")){
+				return NormalizationType.ADVANCED;
+			} else{
+				LOGGER.warn("Wrong normalization type specified, advanced one is selected");
+				return NormalizationType.ADVANCED;
+			}
+		}
 	}
-	
-	//This variable is responsible for normalization to be applied
-	private static final NormalizationType normalizationType = NormalizationType.ADVANCED;
 	
 	/**
 	 * Configures and runs the job with Hadoop
@@ -69,6 +81,10 @@ public class NormalizationDriver {
 		
 		output = propertiesConfig.getString("normalization-output");
 	
+		String type = propertiesConfig.getString("normalization-type");
+		
+		NormalizationType normalizationType = NormalizationType.getNormalizationType(type);
+		
 		//configuring Hadoop and running the job
 		org.apache.hadoop.conf.Configuration hadoopConfig = new org.apache.hadoop.conf.Configuration();
 		hadoopConfig.set("xmlinput.start","<page>") ;
