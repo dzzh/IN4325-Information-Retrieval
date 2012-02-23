@@ -33,8 +33,8 @@ public class WordLevelIndexDriver {
 		
 		Configuration propertiesConfig = null;
 		propertiesConfig = new PropertiesConfiguration(propertiesPath);
-		String input = propertiesConfig.getString("input");
-		String output = propertiesConfig.getString("output");
+		String input = propertiesConfig.getString("source-input");
+		String output = propertiesConfig.getString("word-level-index-output");
 	
 		//configuring Hadoop and running the job
 		org.apache.hadoop.conf.Configuration hadoopConfig = new org.apache.hadoop.conf.Configuration();
