@@ -1,0 +1,265 @@
+<DOC>
+<DOCNO>104-1</DOCNO>
+<TEXT>
+Harry Potter Quidditch Gryffindor character
+</TEXT>
+</DOC>
+
+
+<DOC>
+<DOCNO>104-2</DOCNO>
+<TEXT>
+I am looking for characters in the Harry Potter universe that are part of Gryffindor house or team and that play Quidditch
+</TEXT>
+</DOC>
+
+
+<DOC>
+<DOCNO>110-1</DOCNO>
+<TEXT>
+Nobel Prize in Literature winners who were also poets
+</TEXT>
+</DOC>
+
+
+<DOC>
+<DOCNO>113-1</DOCNO>
+<TEXT>
+Formula 1 drivers that won the Monaco Grand Prix
+</TEXT>
+</DOC>
+
+
+<DOC>
+<DOCNO>113-2</DOCNO>
+<TEXT>
+I want a list of Formula 1 drivers. Each of them must have won at least once the Monaco Grand Prix held in Monte Carlo.
+</TEXT>
+</DOC>
+
+
+<DOC>
+<DOCNO>113-3</DOCNO>
+<TEXT>
+The Monaco Grand Prix (GP) is a Formula 1 competition held in Monte Carlo since 1929. I want to find all the drivers that won the GP over the years.
+</TEXT>
+</DOC>
+
+
+<DOC>
+<DOCNO>115-1</DOCNO>
+<TEXT>
+Formula One World Constructors' Champions
+</TEXT>
+</DOC>
+
+
+<DOC>
+<DOCNO>115-2</DOCNO>
+<TEXT>
+I want the list of Formula One (F1) teams that won at least one World Constructors' championship
+</TEXT>
+</DOC>
+
+
+<DOC>
+<DOCNO>116-3</DOCNO>
+<TEXT>
+I want a list of people who won were nobel prize laureates in any field and have Italian nationality.
+</TEXT>
+</DOC>
+
+
+
+<DOC>
+<DOCNO>118-1</DOCNO>
+<TEXT>
+French car models in 1960's
+</TEXT>
+</DOC>
+
+
+<DOC>
+<DOCNO>119-1</DOCNO>
+<TEXT>
+Swiss cantons where they speak German
+</TEXT>
+</DOC>
+
+
+<DOC>
+<DOCNO>119-2</DOCNO>
+<TEXT>
+I want to find the cantons of Switzerland where German is one of the official language of the canton.</TEXT>
+</DOC>
+
+
+<DOC>
+<DOCNO>119-3</DOCNO>
+<TEXT>
+Switzerland is a federal republic composed of 26 cantons. Each canton has one or more official language: German, French, Italian and/or Romansh. I am looking for the list of the Swiss cantons where German is an official language.
+</TEXT>
+</DOC>
+
+
+<DOC>
+<DOCNO>123-1</DOCNO>
+<TEXT>
+FIFA world cup national team winners since 1974
+</TEXT>
+</DOC>
+
+
+
+<DOC>
+<DOCNO>124-1</DOCNO>
+<TEXT>
+Novels that won the Booker Prize
+</TEXT>
+</DOC>
+
+
+<DOC>
+<DOCNO>124-3</DOCNO>
+<TEXT>
+Find articles that describe the novels which won the prestigious booker prize.
+</TEXT>
+</DOC>
+
+<DOC>
+<DOCNO>126-1</DOCNO>
+<TEXT>
+toy train manufacturers that are still in business
+</TEXT>
+</DOC>
+
+
+
+<DOC>
+<DOCNO>127-1</DOCNO>
+<TEXT>
+german female politicians
+</TEXT>
+</DOC>
+
+
+
+<DOC>
+<DOCNO>128-1</DOCNO>
+<TEXT>
+Bond girls
+</TEXT>
+</DOC>
+
+
+<DOC>
+<DOCNO>128-2</DOCNO>
+<TEXT>
+I want the names of the actresses that have played the role as James Bond girl in any of the James Bond movies.
+</TEXT>
+</DOC>
+
+
+
+<DOC>
+<DOCNO>130-1</DOCNO>
+<TEXT>
+Star Trek Captains
+</TEXT>
+</DOC>
+
+
+<DOC>
+<DOCNO>130-2</DOCNO>
+<TEXT>
+I want a list of names that correspond to the starship captains from the Star Trek series.
+</TEXT>
+</DOC>
+
+
+<DOC>
+<DOCNO>134-1</DOCNO>
+<TEXT>
+record-breaking sprinters in male 100-meter sprints
+</TEXT>
+</DOC>
+
+
+
+<DOC>
+<DOCNO>135-1</DOCNO>
+<TEXT>
+professional baseball team in Japan
+</TEXT>
+</DOC>
+
+
+
+<DOC>
+<DOCNO>136-1</DOCNO>
+<TEXT>
+Japanese players in Major League Baseball
+</TEXT>
+</DOC>
+
+
+<DOC>
+<DOCNO>138-1</DOCNO>
+<TEXT>
+National Parks East Coast Canada US
+</TEXT>
+</DOC>
+
+
+<DOC>
+<DOCNO>138-2</DOCNO>
+<TEXT>
+List national parks, forest, and mountains near the East Coast of Canada and the United States, located around Montreal and Boston
+</TEXT>
+</DOC>
+
+
+
+<DOC>
+<DOCNO>139-1</DOCNO>
+<TEXT>
+Films directed by Akira Kurosawa
+</TEXT>
+</DOC>
+
+
+
+<DOC>
+<DOCNO>140-1</DOCNO>
+<TEXT>
+Airports in Germany
+</TEXT>
+</DOC>
+
+
+
+<DOC>
+<DOCNO>141-1</DOCNO>
+<TEXT>
+Universities in Catalunya
+</TEXT>
+</DOC>
+
+
+<DOC>
+<DOCNO>143-2</DOCNO>
+<TEXT>
+German cities that have been part of the hanseatic league in Rhine, Westphalia, the Netherlands Circle
+</TEXT>
+</DOC>
+
+
+
+<DOC>
+<DOCNO>144-1</DOCNO>
+<TEXT>
+chess world champions
+</TEXT>
+</DOC>
+
+
