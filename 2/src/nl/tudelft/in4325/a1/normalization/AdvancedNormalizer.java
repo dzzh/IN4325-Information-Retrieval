@@ -7,7 +7,7 @@ import java.io.FileReader;
 import java.util.LinkedList;
 import java.util.List;
 
-import nl.tudelft.in4325.a1.Constants;
+import nl.tudelft.in4325.Constants;
 
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;

@@ -2,7 +2,7 @@ package nl.tudelft.in4325.a1.normalization;
 
 import java.io.File;
 
-import nl.tudelft.in4325.a1.Constants;
+import nl.tudelft.in4325.Constants;
 import nl.tudelft.in4325.a1.indexing.TextArrayWritable;
 import nl.tudelft.in4325.a1.utils.XmlInputFormat;
 

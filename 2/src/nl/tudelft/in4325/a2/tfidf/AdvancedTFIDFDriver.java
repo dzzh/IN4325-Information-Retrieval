@@ -2,6 +2,7 @@ package nl.tudelft.in4325.a2.tfidf;
 
 import java.io.File;
 
+import nl.tudelft.in4325.Constants;
 import nl.tudelft.in4325.a1.indexing.TextArrayWritable;
 import nl.tudelft.in4325.a1.indexing.WordLevelIndexReducer;
 import nl.tudelft.in4325.a1.normalization.AdvancedNormalizationMapper;
@@ -21,17 +22,13 @@ public class AdvancedTFIDFDriver {
 	// private static final Logger LOGGER =
 	// LoggerFactory.getLogger(SimpleNormalizationDriver.class);
 
-	private static final String PROPERTIES_FILE = "conf/conf.ini";
-	private static final String DEFAULT_PROPERTIES_FILE = "conf/conf.default.ini";
-	private static final String JOB = "SimpleTFIDF";
-
 	public static void main(String[] args) throws Exception {
 
 		// reading input and output paths from configuration file
-		String propertiesPath = DEFAULT_PROPERTIES_FILE;
+		String propertiesPath = Constants.DEFAULT_PROPERTIES_FILE;
 
-		if (new File(PROPERTIES_FILE).exists()) {
-			propertiesPath = PROPERTIES_FILE;
+		if (new File(Constants.PROPERTIES_FILE).exists()) {
+			propertiesPath = Constants.PROPERTIES_FILE;
 		}
 
 		Configuration propertiesConfig = null;
@@ -48,7 +45,7 @@ public class AdvancedTFIDFDriver {
 		// String[] otherArgs = new
 		// GenericOptionsParser(hadoopConfig,args).getRemainingArgs();
 
-		Job createIndexJob = new Job(hadoopConfig, JOB);
+		Job createIndexJob = new Job(hadoopConfig, Constants.Jobs.ADVANCED_TFIDF.name());
 		createIndexJob.setJarByClass(AdvancedTFIDFDriver.class);
 		createIndexJob.setMapperClass(AdvancedNormalizationMapper.class);
 		createIndexJob.setReducerClass(WordLevelIndexReducer.class);
@@ -66,7 +63,7 @@ public class AdvancedTFIDFDriver {
 		}
 
 		// Create TF.IDF vector space
-		Job createTFIDFjob = new Job(hadoopConfig, JOB);
+		Job createTFIDFjob = new Job(hadoopConfig, Constants.Jobs.ADVANCED_TFIDF.name());
 		createTFIDFjob.setJarByClass(AdvancedTFIDFDriver.class);
 		createTFIDFjob.setMapperClass(AdvancedTFIDFMapper.class);
 		createTFIDFjob.setReducerClass(TFIDFReducer.class);

@@ -29,8 +29,7 @@ public class QueryParser {
 	private static final String TEXT_END_TAG = "</TEXT>";
 	private static final String TEXT_START_TAG = "<TEXT>";
 
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(QueryParser.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(QueryParser.class);
 
 	private boolean advancedNormalization;
 	
@@ -52,8 +51,6 @@ public class QueryParser {
 		Map<String, Map<String, Integer>> queries = new HashMap<String, Map<String, Integer>>();
 
 		try {
-			// Open the file that is the first
-			// command line parameter
 			FileInputStream fstream = new FileInputStream(queryFilePath);
 			BufferedReader br = new BufferedReader(new InputStreamReader(
 					fstream));
@@ -75,7 +72,8 @@ public class QueryParser {
 			// Close the input stream
 			fstream.close();
 		} catch (Exception e) {// Catch exception if any
-			System.err.println("Error: " + e.getMessage());
+			LOGGER.error("Error: " + e.getMessage());
+			System.exit(1);
 		}
 
 		return queries;

@@ -4,22 +4,21 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import nl.tudelft.in4325.Constants;
 import nl.tudelft.in4325.a2.utils.QueryParser;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 public class SimpleTFIDFMapper extends Mapper<Object, Text, Text, Text> {
 
 	// TODO - calculate the number of documents in the corpus.
 	private static final int NUMBER_OF_DOCUMENTS = 3000;
 
-	public static final String QUERIES_FILE = "conf/training-queries.txt";
-
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(SimpleTFIDFMapper.class);
+//	private static final Logger LOGGER = LoggerFactory
+//			.getLogger(SimpleTFIDFMapper.class);
 
 	private Map<String, Map<String, Integer>> queries;
 
@@ -86,7 +85,7 @@ public class SimpleTFIDFMapper extends Mapper<Object, Text, Text, Text> {
 	}
 	
 	protected Map<String, Map<String, Integer>> extractQueries() {
-		return new QueryParser(false).parserQuery(QUERIES_FILE);
+		return new QueryParser(false).parserQuery(Constants.QUERIES_FILE);
 	}
 
 }
