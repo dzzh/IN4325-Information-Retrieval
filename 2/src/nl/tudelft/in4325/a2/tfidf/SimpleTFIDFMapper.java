@@ -9,16 +9,14 @@ import nl.tudelft.in4325.a2.utils.QueryParser;
 
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
 
 public class SimpleTFIDFMapper extends Mapper<Object, Text, Text, Text> {
 
 	// TODO - calculate the number of documents in the corpus.
-	private static final int NUMBER_OF_DOCUMENTS = 3000;
+	private static final int NUMBER_OF_DOCUMENTS = 9515;
 
-//	private static final Logger LOGGER = LoggerFactory
-//			.getLogger(SimpleTFIDFMapper.class);
+	// private static final Logger LOGGER = LoggerFactory
+	// .getLogger(SimpleTFIDFMapper.class);
 
 	private Map<String, Map<String, Integer>> queries;
 
@@ -47,15 +45,24 @@ public class SimpleTFIDFMapper extends Mapper<Object, Text, Text, Text> {
 
 				for (String doc : docNumberOfOccurences.keySet()) {
 
-					// calculate the tf.idf for each document
-					double documentTFIDF = docNumberOfOccurences.get(doc)
-							* wordIDF;
+					double documentTFIDF = calculateTFIDF(
+							docNumberOfOccurences.get(doc), wordIDF);
 
 					context.write(new Text(query), new Text(word + "," + doc
-							+ "," + documentTFIDF * queryTFIDF));
+							+ "," + documentTFIDF + "," + queryTFIDF));
 				}
 			}
 		}
+	}
+
+	/**
+	 * Calculates the tf.idf for each document
+	 * 
+	 * @return
+	 */
+	protected double calculateTFIDF(int frequency, double wordIDF) {
+		double documentTFIDF = frequency * wordIDF;
+		return documentTFIDF;
 	}
 
 	/**
@@ -75,7 +82,7 @@ public class SimpleTFIDFMapper extends Mapper<Object, Text, Text, Text> {
 		for (String doc : docs) {
 			if (doc.trim().isEmpty())
 				continue;
-			
+
 			int numberOfOccurances = doc.substring(doc.indexOf("<") + 1).split(
 					",").length;
 			String docId = doc.substring(0, doc.indexOf("<")).trim();
@@ -83,7 +90,7 @@ public class SimpleTFIDFMapper extends Mapper<Object, Text, Text, Text> {
 		}
 		return docNumberOfOccurences;
 	}
-	
+
 	protected Map<String, Map<String, Integer>> extractQueries() {
 		return new QueryParser(false).parserQuery(Constants.QUERIES_FILE);
 	}
