@@ -35,7 +35,7 @@ public class TFIDFReducer extends Reducer<Text, Text, Text, Text> {
 			Double documentTFIDF = Double.valueOf(value[value.length - 2]);
 
 			Double queryTFIDF = Double.valueOf(value[value.length - 1]);
-
+			
 			if (!docScore.containsKey(docID)) {
 				docScore.put(docID, 0d);
 				docLength.put(docID, 0d);
@@ -44,8 +44,10 @@ public class TFIDFReducer extends Reducer<Text, Text, Text, Text> {
 			docScore.put(docID, docScore.get(docID)
 					+ (documentTFIDF * queryTFIDF));
 
-			docLength.put(docID,
-					docLength.get(docID) + Math.pow(documentTFIDF, 2));
+			docLength.put(
+					docID,
+					docLength.get(docID) + Math.pow(documentTFIDF, 2)
+							+ Math.pow(queryTFIDF, 2));
 
 		}
 

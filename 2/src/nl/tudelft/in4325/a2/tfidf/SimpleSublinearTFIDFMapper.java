@@ -5,7 +5,7 @@ public class SimpleSublinearTFIDFMapper extends SimpleTFIDFMapper {
 	@Override
 	protected double calculateTFIDF(int frequency, double wordIDF) {
 		if (frequency > 0) {
-			return (1 + Math.log10(frequency)) * wordIDF;
+			return (1 + Math.log(frequency)) * wordIDF;
 		} else {
 			return 0;
 		}

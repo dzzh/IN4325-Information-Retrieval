@@ -12,11 +12,8 @@ import org.apache.hadoop.mapreduce.Mapper;
 
 public class SimpleTFIDFMapper extends Mapper<Object, Text, Text, Text> {
 
-	// TODO - calculate the number of documents in the corpus.
+	// TODO - define it as an external property
 	private static final int NUMBER_OF_DOCUMENTS = 9515;
-
-	// private static final Logger LOGGER = LoggerFactory
-	// .getLogger(SimpleTFIDFMapper.class);
 
 	private Map<String, Map<String, Integer>> queries;
 
@@ -37,7 +34,7 @@ public class SimpleTFIDFMapper extends Mapper<Object, Text, Text, Text> {
 			if (queries.get(query).keySet().contains(word)) {
 
 				// calculate the IDF of the word
-				double wordIDF = Math.log10(NUMBER_OF_DOCUMENTS
+				double wordIDF = Math.log(NUMBER_OF_DOCUMENTS
 						/ docNumberOfOccurences.size());
 
 				// calculate the TF.IDF of the query term
@@ -48,8 +45,10 @@ public class SimpleTFIDFMapper extends Mapper<Object, Text, Text, Text> {
 					double documentTFIDF = calculateTFIDF(
 							docNumberOfOccurences.get(doc), wordIDF);
 
-					context.write(new Text(query), new Text(word + "," + doc
-							+ "," + documentTFIDF + "," + queryTFIDF));
+					if (documentTFIDF != 0) {
+						context.write(new Text(query), new Text(word + ","
+								+ doc + "," + documentTFIDF + "," + queryTFIDF));
+					}
 				}
 			}
 		}
