@@ -1,5 +1,6 @@
 package nl.tudelft.in4325.a2.tfidf;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -7,18 +8,41 @@ import java.util.Map;
 import nl.tudelft.in4325.Constants;
 import nl.tudelft.in4325.a2.utils.QueryParser;
 
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SimpleTFIDFMapper extends Mapper<Object, Text, Text, Text> {
 
-	// TODO - define it as an external property
-	private static final int NUMBER_OF_DOCUMENTS = 9515;
+	private final int numberOfDocuments;
 
 	private Map<String, Map<String, Integer>> queries;
 
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(SimpleTFIDFMapper.class);
+
 	public SimpleTFIDFMapper() {
 		queries = extractQueries();
+
+		String propertiesPath = Constants.DEFAULT_PROPERTIES_FILE;
+
+		if (new File(Constants.PROPERTIES_FILE).exists()) {
+			propertiesPath = Constants.PROPERTIES_FILE;
+		}
+
+		Configuration propertiesConfig = null;
+		try {
+			propertiesConfig = new PropertiesConfiguration(propertiesPath);
+		} catch (ConfigurationException e) {
+			LOGGER.error("Error loading number-of-documents config property");
+		}
+
+		numberOfDocuments = Integer.valueOf(propertiesConfig
+				.getString("number-of-documents"));
 	}
 
 	public void map(Object key, Text value, Context context)
@@ -34,7 +58,7 @@ public class SimpleTFIDFMapper extends Mapper<Object, Text, Text, Text> {
 			if (queries.get(query).keySet().contains(word)) {
 
 				// calculate the IDF of the word
-				double wordIDF = Math.log(NUMBER_OF_DOCUMENTS
+				double wordIDF = Math.log(numberOfDocuments
 						/ docNumberOfOccurences.size());
 
 				// calculate the TF.IDF of the query term
