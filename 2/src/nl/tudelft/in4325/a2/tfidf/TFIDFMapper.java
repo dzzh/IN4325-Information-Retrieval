@@ -1,15 +1,16 @@
 package nl.tudelft.in4325.a2.tfidf;
 
-import nl.tudelft.in4325.ConfigurationHelper;
-import nl.tudelft.in4325.a1.normalization.NormalizationType;
-import nl.tudelft.in4325.a2.utils.QueryParser;
-import org.apache.commons.configuration.Configuration;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Mapper;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import nl.tudelft.in4325.ConfigurationHelper;
+import nl.tudelft.in4325.a1.normalization.NormalizationType;
+import nl.tudelft.in4325.a2.utils.QueryParser;
+
+import org.apache.commons.configuration.Configuration;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Mapper;
 
 public class TFIDFMapper extends Mapper<Object, Text, Text, Text> {
 
@@ -32,7 +33,7 @@ public class TFIDFMapper extends Mapper<Object, Text, Text, Text> {
 		// parsing the document contents
 		String stringValue = value.toString();
 
-		String word = stringValue.substring(0, stringValue.indexOf("<")).trim();
+		String word = stringValue.substring(0, stringValue.indexOf("\t")).trim();
 
 		Map<String, Integer> docNumberOfOccurrences = extractIndexInformation(stringValue);
 
@@ -47,6 +48,7 @@ public class TFIDFMapper extends Mapper<Object, Text, Text, Text> {
 
 				for (String doc : docNumberOfOccurrences.keySet()) {
 
+					// calculate the TF.IDF of the document term
 					double documentTFIDF = calculateTFIDF(docNumberOfOccurrences.get(doc), wordIDF);
 
 					if (documentTFIDF != 0) {
@@ -77,22 +79,14 @@ public class TFIDFMapper extends Mapper<Object, Text, Text, Text> {
 	 *         number of times that the word occurs within this document.
 	 */
 	private Map<String, Integer> extractIndexInformation(String stringValue) {
-		String content = stringValue.substring(stringValue.indexOf("<") + 1,
-				stringValue.lastIndexOf(">"));
+		String docs[] = stringValue.split(" ");
 
-		String docs[] = content.split(">;");
+		Map<String, Integer> docNumberOfOccurences = new HashMap<String, Integer>();
 
-		Map<String, Integer> docNumberOfOccurrences = new HashMap<String, Integer>();
-
-		for (String doc : docs) {
-			if (doc.trim().isEmpty())
-				continue;
-
-			int numberOfOccurrences = doc.substring(doc.indexOf("<") + 1).split(",").length;
-			String docId = doc.substring(0, doc.indexOf("<")).trim();
-            docNumberOfOccurrences.put(docId, numberOfOccurrences);
+		for (int i = 1; i < docs.length; i += 2) {
+			docNumberOfOccurences.put(docs[i], Integer.valueOf(docs[i + 1]));
 		}
-		return docNumberOfOccurrences;
+		return docNumberOfOccurences;
 	}
 
 }

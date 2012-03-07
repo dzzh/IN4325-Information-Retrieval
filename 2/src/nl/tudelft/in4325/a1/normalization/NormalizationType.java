@@ -8,7 +8,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public enum NormalizationType {
     SIMPLE(new SimpleNormalizer()),
-    ADVANCED(new AdvancedNormalizer());
+    ADVANCED(new AdvancedNormalizer()),
+    CLAUDIA(new ClaudiaAdvancedNormalizer());
 
     private static final Log LOGGER = LogFactory.getLog(NormalizationType.class);
 
@@ -27,7 +28,9 @@ public enum NormalizationType {
             return NormalizationType.SIMPLE;
         } else if (type.equalsIgnoreCase("advanced")) {
             return NormalizationType.ADVANCED;
-        } else {
+        } else if (type.equalsIgnoreCase("claudia")) {
+            return NormalizationType.CLAUDIA;
+        }else {
             LOGGER.warn("Wrong normalization type specified, advanced one is selected");
             return NormalizationType.ADVANCED;
         }

@@ -1,15 +1,20 @@
 package nl.tudelft.in4325.a2.utils;
 
-import nl.tudelft.in4325.a1.normalization.Normalizer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.BufferedReader;
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import nl.tudelft.in4325.a1.normalization.Normalizer;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Parses the file containing the queries.
@@ -43,8 +48,9 @@ public class QueryParser {
 		Map<String, Map<String, Integer>> queries = new HashMap<String, Map<String, Integer>>();
 
 		try {
-			FileInputStream fstream = new FileInputStream(queryFilePath);
-			BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+			FileSystem dfsTFIDF = FileSystem.get(new URI(queryFilePath), new Configuration());
+			InputStream fstream = dfsTFIDF.open(new Path(queryFilePath));
+			BufferedReader br = new BufferedReader(new InputStreamReader(dfsTFIDF.open(new Path(queryFilePath))));
 			String strLine;
 			// Read File Line By Line
 			StringBuilder sb = new StringBuilder();
