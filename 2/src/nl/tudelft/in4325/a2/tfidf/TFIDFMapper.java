@@ -1,5 +1,9 @@
 package nl.tudelft.in4325.a2.tfidf;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import nl.tudelft.in4325.ConfigurationHelper;
 import nl.tudelft.in4325.a1.normalization.NormalizationType;
 import nl.tudelft.in4325.a2.utils.QueryParser;
@@ -7,9 +11,6 @@ import nl.tudelft.in4325.a2.utils.WordIndexExtractor;
 import org.apache.commons.configuration.Configuration;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
-
-import java.io.IOException;
-import java.util.Map;
 
 public class TFIDFMapper extends Mapper<Object, Text, Text, Text> {
 
@@ -31,7 +32,7 @@ public class TFIDFMapper extends Mapper<Object, Text, Text, Text> {
 		// parsing the document contents
 		String stringValue = value.toString();
 
-		String word = stringValue.substring(0, stringValue.indexOf("<")).trim();
+		String word = stringValue.substring(0, stringValue.indexOf("\t")).trim();
 
 		Map<String, Integer> docNumberOfOccurrences = wordIndexExtractor.extractWordFrequencies(stringValue);
 
@@ -46,6 +47,7 @@ public class TFIDFMapper extends Mapper<Object, Text, Text, Text> {
 
 				for (String doc : docNumberOfOccurrences.keySet()) {
 
+					// calculate the TF.IDF of the document term
 					double documentTFIDF = calculateTFIDF(docNumberOfOccurrences.get(doc), wordIDF);
 
 					if (documentTFIDF != 0) {
@@ -67,6 +69,5 @@ public class TFIDFMapper extends Mapper<Object, Text, Text, Text> {
 	protected double calculateTFIDF(int frequency, double wordIDF) {
 		return frequency * wordIDF;
 	}
-
 
 }

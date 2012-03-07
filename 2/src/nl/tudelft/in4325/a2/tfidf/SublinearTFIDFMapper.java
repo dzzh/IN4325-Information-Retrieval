@@ -1,5 +1,9 @@
 package nl.tudelft.in4325.a2.tfidf;
 
+/**
+ * Implements the term weight normalization approach called "Sublinear tf scaling".
+ *
+ */
 public class SublinearTFIDFMapper extends TFIDFMapper {
 
 	@Override

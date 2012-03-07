@@ -13,20 +13,12 @@ public class WordIndexExtractor {
      *         number of times that the word occurs within this document.
      */
     public Map<String, Integer> extractWordFrequencies(String stringValue) {
-        String content = stringValue.substring(stringValue.indexOf("<") + 1,
-                stringValue.lastIndexOf(">"));
-
-        String docs[] = content.split(">;");
+        String docs[] = stringValue.split(" ");
 
         Map<String, Integer> docNumberOfOccurrences = new HashMap<String, Integer>();
 
-        for (String doc : docs) {
-            if (doc.trim().isEmpty())
-                continue;
-
-            int numberOfOccurrences = doc.substring(doc.indexOf("<") + 1).split(",").length;
-            String docId = doc.substring(0, doc.indexOf("<")).trim();
-            docNumberOfOccurrences.put(docId, numberOfOccurrences);
+        for (int i = 1; i < docs.length; i += 2) {
+            docNumberOfOccurrences.put(docs[i], Integer.valueOf(docs[i + 1]));
         }
         return docNumberOfOccurrences;
     }
