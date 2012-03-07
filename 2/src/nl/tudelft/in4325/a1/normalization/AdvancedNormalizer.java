@@ -1,53 +1,85 @@
 package nl.tudelft.in4325.a1.normalization;
 
+import info.bliki.wiki.filter.PlainTextConverter;
 import info.bliki.wiki.model.WikiModel;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.LinkedList;
-import java.util.List;
-
-import nl.tudelft.in4325.Constants;
+import java.util.*;
 
 import org.jsoup.Jsoup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.tartarus.snowball.SnowballStemmer;
 import org.tartarus.snowball.ext.englishStemmer;
 
-public class AdvancedNormalizer {
-
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(AdvancedNormalizer.class);
+/**
+ * Advanced implementation of {@link Normalizer}.
+ * Removes wiki markup and HTML formatting, tokenizes the text and applies Porter2 stemming algorithm to tokens.
+ */
+public class AdvancedNormalizer implements Normalizer{
 
 	// Third-party library to remove Wikipedia formatting
 	private WikiModel wikiModel = new WikiModel(
 			"http://www.mywiki.com/wiki/${image}",
 			"http://www.mywiki.com/wiki/${title}");
 
-	// List of stop words not to process
-	private List<String> stopWords = readStopWords();
-
-	// Porter2 stemmer for English
+	// Porter2 stemmer for English language
 	private SnowballStemmer stemmer = new englishStemmer();
 
 	// Symbols allowed in tokens, apart from letters, digits and white spaces
-	private String allowedSymbols = "%-_";
+	private static final String allowedSymbols = "%-_";
 
 	String curlyBraces = "{}";
 	char leftBrace = curlyBraces.charAt(0);
 	char rightBrace = curlyBraces.charAt(1);
 
+    public Map<String, List<String>> normalize(String text){
+        text = text.toLowerCase(Locale.ENGLISH);
+
+        //removing Wikipedia formatting
+        String plainText = getWikiModel().render(new PlainTextConverter(), text);
+
+        //removing HTML tags
+        plainText = removeHtmlTags(plainText);
+
+        //additional markup removals
+        plainText = removeMarkup(plainText);
+
+        StringTokenizer st = new StringTokenizer(plainText, " \t\n\r\f\\/");
+        int positionCounter = 0;
+        Map<String, List<String>> result = new HashMap<String, List<String>>();
+
+        while(st.hasMoreTokens())
+        {
+            String token = st.nextToken();
+
+            //removing noise symbols (leaving alpha plus couple of others)	 
+            token = removeNonAlphaNumericSymbols(token);
+
+            if (isTokenValid(token)){
+                //Applying Porter2 stemming algorithm and emit results
+                stemmer.setCurrent(token);
+                stemmer.stem();
+                String word = stemmer.getCurrent();
+                if (!result.containsKey(word)) {
+                    result.put(word, new ArrayList<String>());
+                }
+
+                result.get(word).add(String.valueOf(positionCounter));
+            }
+
+            positionCounter++;
+        }
+        
+        return result;
+    }
+    
 	/**
 	 * Removes noise from tokens
 	 * 
-	 * @param text
-	 *            token to process
+	 * @param text token to process
 	 * @return result
 	 */
-	public String removeNonAlphaNumericSymbols(String text) {
+	private String removeNonAlphaNumericSymbols(String text) {
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		for (int i = 0; i < text.length(); i++) {
 			char c = text.charAt(i);
@@ -63,16 +95,17 @@ public class AdvancedNormalizer {
 	/**
 	 * Determines validity of a token by comparison with a list of stop words
 	 * 
-	 * @param token
-	 *            current token
+	 * @param token current token
 	 * @return true if the token is valid, false otherwise
 	 */
-	public boolean isTokenValid(String token) {
+	private boolean isTokenValid(String token) {
 
 		if (token.length() == 0) {
 			return false;
 		}
 
+        List<String> stopWords = StopWords.getStopWords();
+        
 		for (String stopWord : stopWords) {
 			if (token.startsWith(stopWord)) {
 				return false;
@@ -83,54 +116,24 @@ public class AdvancedNormalizer {
 	}
 
 	/**
-	 * Reads corpus-dependent stop words from a file (one word at one line) and
-	 * saves them to list
-	 * 
-	 * @return list of stop words
-	 */
-	private List<String> readStopWords() {
-		stopWords = new LinkedList<String>();
-
-		try {
-			FileReader fr = new FileReader(Constants.STOPWORDS_FILE);
-			BufferedReader in = new BufferedReader(fr);
-			String strLine;
-			while ((strLine = in.readLine()) != null) {
-				if (!strLine.startsWith("#") && !strLine.isEmpty()) {
-					stopWords.add(strLine);
-				}
-			}
-			in.close();
-			fr.close();
-		} catch (Exception e) {
-			LOGGER.error("Error: ", e);
-			System.exit(1);
-		}
-
-		return stopWords;
-	}
-
-	/**
 	 * Removes HTML formatting from text
 	 * 
-	 * @param html
-	 *            HTML-formatted String
+	 * @param html HTML-formatted String
 	 * @return plain text String
 	 */
-	public String removeHtmlTags(String html) {
+	private String removeHtmlTags(String html) {
 		return Jsoup.parse(html).text();
 	}
 
 	/**
 	 * Additional wiki markup removal procedures
 	 * 
-	 * @param text
-	 *            text with markup
+	 * @param text text with markup
 	 * @return plain text
 	 */
-	public String removeMarkup(String text) {
+	private String removeMarkup(String text) {
 
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		int braces = 0;
 
 		// removes any content between two or more consequent pairs of curly
@@ -151,11 +154,7 @@ public class AdvancedNormalizer {
 		return sb.toString();
 	}
 
-	public SnowballStemmer getStemmer() {
-		return stemmer;
-	}
-
-	public WikiModel getWikiModel() {
+	private WikiModel getWikiModel() {
 		return wikiModel;
 	}
 }

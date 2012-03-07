@@ -19,8 +19,8 @@ public class DocLevelIndexReducer extends Reducer<Text, TextArrayWritable, Text,
 
 		List<Integer> toReturn = new ArrayList<Integer>();
 		while (values.iterator().hasNext()) {
-			//we are only interested in the pageID. The possitions are ignored.
-			Text pageID  = (Text) ((TextArrayWritable)values.iterator().next()).get()[0];
+			//we are only interested in the pageID. The positions are ignored.
+			Text pageID  = (Text) values.iterator().next().get()[0];
 			toReturn.add(Integer.valueOf(pageID.toString()));
 		}
 		

@@ -1,14 +1,13 @@
 package nl.tudelft.in4325.a1.normalization;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
+import nl.tudelft.in4325.ConfigurationHelper;
 import nl.tudelft.in4325.a1.indexing.TextArrayWritable;
 
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
@@ -17,44 +16,34 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Normalizes corpus of XML documents with tokenization according to white spaces.
+ * Normalizes corpus of XML documents.
  */
-public class SimpleNormalizationMapper extends Mapper<Object, Text, Text, TextArrayWritable>{
+public class NormalizationMapper extends Mapper<Object, Text, Text, TextArrayWritable>{
 	
 	private static final String ID_TAG = "id";
 	private static final String TEXT_TAG = "text";
 	
     private Text word = new Text();
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleNormalizationMapper.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NormalizationMapper.class);
     
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException{
+
+        Configuration appConfig = new ConfigurationHelper().getConfiguration();
+        String type = appConfig.getString("normalization-type");
+        NormalizationType normalizationType = NormalizationType.getNormalizationType(type);
+        
     	//parsing the document contents
     	String stringValue = value.toString();
     	
-    	int id = Integer.valueOf(extractContents(stringValue, ID_TAG)).intValue();
+    	int id = Integer.valueOf(extractContents(stringValue, ID_TAG));
     	String text = extractContents(stringValue, TEXT_TAG);
     	if (text.length() == 0){
     		LOGGER.warn("No text was extracted for id " + id);
     	}
     	
-    	//normalization and output
-        StringTokenizer st = new StringTokenizer(text);
-        int positionCounter = 0;
-		Map<String, List<String>> wordPositions = new HashMap<String, List<String>>();
+		Map<String, List<String>> wordPositions = normalizationType.getNormalizer().normalize(text);
 		
-        while(st.hasMoreTokens())
-        {
-        	String word = st.nextToken();
-			if (!wordPositions.containsKey(word)) {
-				wordPositions.put(word, new ArrayList<String>());
-			}
-
-			wordPositions.get(word).add(String.valueOf(positionCounter));
-			
-            positionCounter++;
-        }
-        
         for (String term : wordPositions.keySet()) {
 			Writable[] tuples = {
 					new Text(String.valueOf(id)),

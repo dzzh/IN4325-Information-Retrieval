@@ -7,8 +7,7 @@ public final class Constants {
 	public static final String PROPERTIES_FILE = "conf/conf.ini";
 	public static final String DEFAULT_PROPERTIES_FILE = "conf/conf.default.ini";
 	public static final String STOPWORDS_FILE = "conf/stopwords.txt";
-	public static final String QUERIES_FILE = "conf/training-queries.txt";
-	
+
 	public static final String FIELD_SEPARATOR = ":";
 	
 	private Constants(){}
@@ -17,13 +16,11 @@ public final class Constants {
 	 *	MapReduce jobs names
 	 */
 	public static enum Jobs{
-		SIMPLE_NORMALIZATION,
-		ADVANCED_NORMALIZATION,
+		NORMALIZATION,
 		NORMALIZATION_REPORT_AGGREGATION,
 		NORMALIZATION_REPORT_FREQUENCY,
 		INVERTED_INDEXING,
-		SIMPLE_TFIDF,
-		ADVANCED_TFIDF
+		TFIDF
 	}
 
 	/**

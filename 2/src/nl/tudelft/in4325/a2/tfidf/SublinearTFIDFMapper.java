@@ -1,6 +1,6 @@
 package nl.tudelft.in4325.a2.tfidf;
 
-public class SimpleSublinearTFIDFMapper extends SimpleTFIDFMapper {
+public class SublinearTFIDFMapper extends TFIDFMapper {
 
 	@Override
 	protected double calculateTFIDF(int frequency, double wordIDF) {

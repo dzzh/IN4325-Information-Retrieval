@@ -1,0 +1,139 @@
+<DOC>
+<DOCNO>60-1</DOCNO>
+<TEXT>
+olympic classes dinghy sailing
+</TEXT>
+</DOC>
+<DOC>
+<DOCNO>60-2</DOCNO>
+<TEXT>
+The user wants the dinghy classes that are or have been olympic classes, such as Europe and 470.
+</TEXT>
+</DOC>
+<DOC>
+<DOCNO>62-1</DOCNO>
+<TEXT>
+Neil Gaiman novels
+</TEXT>
+</DOC>
+<DOC>
+<DOCNO>64-1</DOCNO>
+<TEXT>
+Alan Moore graphic novels adapted to film
+</TEXT>
+</DOC>
+<DOC>
+<DOCNO>64-2</DOCNO>
+<TEXT>
+Return a list of graphic novels written by Alan Moore
+that were adapted to film.
+</TEXT>
+</DOC>
+<DOC>
+<DOCNO>65-1</DOCNO>
+<TEXT>
+Pacific navigators Australia explorers
+</TEXT>
+</DOC>
+<DOC>
+<DOCNO>65-2</DOCNO>
+<TEXT>
+Find the navigators and explorers in the Pacific sea in
+search of Australia
+</TEXT>
+</DOC>
+<DOC>
+<DOCNO>67-1</DOCNO>
+<TEXT>
+Ferris and observation wheels
+</TEXT>
+</DOC>
+<DOC>
+<DOCNO>74-1</DOCNO>
+<TEXT>
+circus mammals
+</TEXT>
+</DOC>
+<DOC>
+<DOCNO>79-1</DOCNO>
+<TEXT>
+Works by Charles Rennie Mackintosh
+</TEXT>
+</DOC>
+<DOC>
+<DOCNO>81-1</DOCNO>
+<TEXT>
+Movies about English hooligans
+</TEXT>
+</DOC>
+<DOC>
+<DOCNO>81-2</DOCNO>
+<TEXT>
+Movies showing English football hooligans
+</TEXT>
+</DOC>
+<DOC>
+<DOCNO>87-1</DOCNO>
+<TEXT>
+Axis powers of World War II
+</TEXT>
+</DOC>
+<DOC>
+<DOCNO>91-1</DOCNO>
+<TEXT>
+Paul Auster novels
+</TEXT>
+</DOC>
+<DOC>
+<DOCNO>94-1</DOCNO>
+<TEXT>
+Hybrid cars sold in Europe
+</TEXT>
+</DOC>
+<DOC>
+<DOCNO>94-2</DOCNO>
+<TEXT>
+The result list shold contain vehicles powered by hybrid
+(conventional & electric) engines that have ever been sold in a European
+country 
+</TEXT>
+</DOC>
+<DOC>
+<DOCNO>95-1</DOCNO>
+<TEXT>
+Tom Hanks movies where he plays a leading role.
+</TEXT>
+</DOC>
+<DOC>
+<DOCNO>96-1</DOCNO>
+<TEXT>
+Pure object-oriented programing languages
+</TEXT>
+</DOC>
+<DOC>
+<DOCNO>96-2</DOCNO>
+<TEXT>
+I want a list of programing languages that are pure
+object-oriented languages. These languages should support all features:
+classes, methods, polymorphism, inheritance, and reusability, but should
+not support other paradigms.
+</TEXT>
+</DOC>
+<DOC>
+<DOCNO>97-1</DOCNO>
+<TEXT>
+Compilers that can compile both C and C++
+</TEXT>
+</DOC>
+<DOC>
+<DOCNO>99-1</DOCNO>
+<TEXT>
+Computer systems that have a recursive acronym for the name
+</TEXT>
+</DOC>
+<DOC>
+<DOCNO>106-1</DOCNO>
+<TEXT>
+Operating systems to which Steve Jobs related
+</TEXT>
+</DOC>

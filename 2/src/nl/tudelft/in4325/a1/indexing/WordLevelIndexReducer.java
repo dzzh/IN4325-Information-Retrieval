@@ -20,8 +20,7 @@ public class WordLevelIndexReducer extends
 		//The page IDs has to be sorted
 		Map<Integer, Writable> toReturn = new TreeMap<Integer, Writable>();
 		while (values.iterator().hasNext()) {
-			Writable[] value = ((TextArrayWritable) values.iterator().next())
-					.get();
+			Writable[] value = values.iterator().next().get();
 			toReturn.put(Integer.valueOf(value[0].toString()), value[1]);
 		}
 
