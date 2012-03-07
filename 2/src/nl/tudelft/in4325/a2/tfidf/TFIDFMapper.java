@@ -3,27 +3,26 @@ package nl.tudelft.in4325.a2.tfidf;
 import nl.tudelft.in4325.ConfigurationHelper;
 import nl.tudelft.in4325.a1.normalization.NormalizationType;
 import nl.tudelft.in4325.a2.utils.QueryParser;
+import nl.tudelft.in4325.a2.utils.WordIndexExtractor;
 import org.apache.commons.configuration.Configuration;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 public class TFIDFMapper extends Mapper<Object, Text, Text, Text> {
 
-	private int numberOfDocuments;
-	private Map<String, Map<String, Integer>> queries;
-    private NormalizationType normalizationType;
-	
+	private final int numberOfDocuments;
+	private final Map<String, Map<String, Integer>> queries;
+    private final WordIndexExtractor wordIndexExtractor = new WordIndexExtractor();
 
 	public TFIDFMapper(){
 		Configuration appConfig = new ConfigurationHelper().getConfiguration();
         String platform = appConfig.getString("target-platform");
 		numberOfDocuments = Integer.valueOf(appConfig.getString(platform + "-number-of-documents"));
         String type = appConfig.getString("normalization-type");
-        normalizationType = NormalizationType.getNormalizationType(type);
+        NormalizationType normalizationType = NormalizationType.getNormalizationType(type);
         String queriesFile = appConfig.getString(platform + "-queries-file");
         queries = new QueryParser(normalizationType.getNormalizer()).parseQuery(queriesFile);
 	}
@@ -34,7 +33,7 @@ public class TFIDFMapper extends Mapper<Object, Text, Text, Text> {
 
 		String word = stringValue.substring(0, stringValue.indexOf("<")).trim();
 
-		Map<String, Integer> docNumberOfOccurrences = extractIndexInformation(stringValue);
+		Map<String, Integer> docNumberOfOccurrences = wordIndexExtractor.extractWordFrequencies(stringValue);
 
 		for (String query : queries.keySet()) {
 			if (queries.get(query).keySet().contains(word)) {
@@ -69,30 +68,5 @@ public class TFIDFMapper extends Mapper<Object, Text, Text, Text> {
 		return frequency * wordIDF;
 	}
 
-	/**
-	 * Extracts information about a word from the entry in the index file.
-	 * @param stringValue word in index
-     * 
-	 * @return - Map, where the key is the document ID and the value is the
-	 *         number of times that the word occurs within this document.
-	 */
-	private Map<String, Integer> extractIndexInformation(String stringValue) {
-		String content = stringValue.substring(stringValue.indexOf("<") + 1,
-				stringValue.lastIndexOf(">"));
-
-		String docs[] = content.split(">;");
-
-		Map<String, Integer> docNumberOfOccurrences = new HashMap<String, Integer>();
-
-		for (String doc : docs) {
-			if (doc.trim().isEmpty())
-				continue;
-
-			int numberOfOccurrences = doc.substring(doc.indexOf("<") + 1).split(",").length;
-			String docId = doc.substring(0, doc.indexOf("<")).trim();
-            docNumberOfOccurrences.put(docId, numberOfOccurrences);
-		}
-		return docNumberOfOccurrences;
-	}
 
 }
