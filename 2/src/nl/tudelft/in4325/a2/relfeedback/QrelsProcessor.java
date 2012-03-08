@@ -65,6 +65,13 @@ public class QrelsProcessor {
                 }
             }
         }
+        
+        for (QueryRelevance qr : queryRelevances){
+        	if (qr.getQueryId().equals("104-1")){
+        		LOGGER.info(qr.getIrrelevantDocuments());
+        	}
+        }
+        
         return queryRelevances;
     }
     

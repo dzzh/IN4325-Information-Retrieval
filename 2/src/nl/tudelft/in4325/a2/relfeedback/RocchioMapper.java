@@ -1,6 +1,7 @@
 package nl.tudelft.in4325.a2.relfeedback;
 
 import nl.tudelft.in4325.ConfigurationHelper;
+import nl.tudelft.in4325.Constants;
 import nl.tudelft.in4325.a1.normalization.NormalizationType;
 import nl.tudelft.in4325.a2.utils.QueryParser;
 import nl.tudelft.in4325.a2.utils.WordIndexExtractor;
@@ -17,8 +18,8 @@ import java.util.Map;
 public class RocchioMapper extends Mapper<Object, Text, Text, Text> {
 
     private static final Log LOGGER = LogFactory.getLog(RocchioMapper.class);
-    
-    private final static double ALPHA = 1;
+
+    private final static double ALPHA = 100;
     private final static double BETA = 0.75;
     private final static double GAMMA = 0;
 
@@ -36,7 +37,6 @@ public class RocchioMapper extends Mapper<Object, Text, Text, Text> {
         NormalizationType normalizationType = NormalizationType.getNormalizationType(type);
         String queriesFile = appConfig.getString(platform + "-queries-file");
         queries = new QueryParser(normalizationType.getNormalizer()).parseQueries(queriesFile);
-        queryRelevances.size();
     }
 
     public void map(Object key, Text value, Context context) throws IOException, InterruptedException{
@@ -50,7 +50,7 @@ public class RocchioMapper extends Mapper<Object, Text, Text, Text> {
             QueryRelevance relevance = null;
             
             for (QueryRelevance qr : queryRelevances){
-                if (query.equals(qr)){
+                if (query.equals(qr.getQueryId())){
                     relevance = qr;
                     break;
                 }
@@ -61,50 +61,52 @@ public class RocchioMapper extends Mapper<Object, Text, Text, Text> {
                 return;
             }
             
-            if (isTermSignificant((String)key, docNumberOfOccurrences, queries.get(query), relevance)) {
-
-                //Compute Rocchio score for the term and emit it
-
-                // calculate the IDF of the word
-                double wordIDF = Math.log(numberOfDocuments / docNumberOfOccurrences.size());
-
-                // calculate the TF.IDF of the query term
-                double queryTFIDF = queries.get(query).get(word) * wordIDF;
-
-                for (Integer docId : docNumberOfOccurrences.keySet()) {
-
-                    // calculate the TF.IDF of the document term
-                    //double documentTFIDF = calculateTFIDF(docNumberOfOccurrences.get(docId), wordIDF);
-
-//                    if (documentTFIDF != 0) {
-//                        context.write(new Text(query), new Text(word + ","
-//                                + docId + "," + documentTFIDF + "," + queryTFIDF));
-//                    }
-                }
-            }
+            computeRocchioScore(word, query, docNumberOfOccurrences, queries.get(query), relevance, context);
         }
     }
 
-    private boolean isTermSignificant(String term, Map<Integer, Integer> termDocs,
-                                      Map<String, Integer> query, QueryRelevance relevance){
+    private boolean computeRocchioScore(String term, String queryId, Map<Integer, Integer> termDocs,
+                                    Map<String, Integer> query, QueryRelevance relevance,
+                                    Context context) throws IOException, InterruptedException{
+        
+        double score = 0;
+
+        double termIDF = Math.log(numberOfDocuments / termDocs.size());
+        double queryScore = 0;
+        double positiveDocScore = 0;
+        double negativeDocScore = 0;
+
         for (String queryTerm : query.keySet()){
             if (queryTerm.equals(term)){
-                return true; 
+                queryScore = ALPHA * query.get(term) * termIDF;
+                break;
             }
         }
         
         for (int termDoc : termDocs.keySet()){
             for (int relDoc : relevance.getRelevantDocuments()){
                 if (termDoc == relDoc){
-                    return true;
+                    positiveDocScore += termIDF * termDocs.get(relDoc);
                 }
             }
+        }
+        positiveDocScore *= BETA;
 
+        for (int termDoc : termDocs.keySet()){
             for (int irrelDoc : relevance.getIrrelevantDocuments()){
                 if (termDoc == irrelDoc){
-                    return true;
+                    negativeDocScore += termIDF * termDocs.get(irrelDoc);
                 }
             }
+        }
+        negativeDocScore *= -1 * GAMMA;
+
+        score = queryScore + positiveDocScore + negativeDocScore;
+
+        if (score > 0){
+            int querySize = queries.get(queryId).size();
+            context.write(new Text(queryId + Constants.FIELD_SEPARATOR + querySize),
+                          new Text(term + Constants.FIELD_SEPARATOR + score));
         }
 
         return false;

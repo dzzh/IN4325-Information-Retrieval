@@ -134,6 +134,13 @@ public class AdvancedNormalizer implements Normalizer{
 	private String removeMarkup(String text) {
 
 		StringBuilder sb = new StringBuilder();
+
+        //adds first symbol for correct further processing
+        char first = text.charAt(0);
+        if (first != leftBrace && first != rightBrace){
+            sb.append(first);
+        }
+
 		int braces = 0;
 
 		// removes any content between two or more consequent pairs of curly

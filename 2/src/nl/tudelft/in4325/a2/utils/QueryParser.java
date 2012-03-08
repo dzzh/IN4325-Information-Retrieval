@@ -78,6 +78,7 @@ public class QueryParser {
 	private Map<String, Integer> extractTerms(String string) {
 		String query = string.substring(string.indexOf(TEXT_START_TAG)
 				+ TEXT_START_TAG.length(), string.indexOf(TEXT_END_TAG));
+        query = query.toLowerCase();
 
 		Map<String, Integer> termNumberOfOccurrences = new HashMap<String, Integer>();
 

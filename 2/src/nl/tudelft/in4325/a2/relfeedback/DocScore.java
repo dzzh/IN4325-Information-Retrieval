@@ -24,7 +24,7 @@ public class DocScore {
 
         @Override
         public int compare(DocScore o1, DocScore o2) {
-            return Double.compare(o1.getScore(), o2.getScore());
+            return Double.compare(o2.getScore(), o1.getScore());
         }
     }
 }

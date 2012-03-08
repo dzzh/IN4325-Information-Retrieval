@@ -42,7 +42,6 @@ public class RocchioDriver {
             dfsTFIDF.delete(outputPathTFIDF, true);
         }
 
-        //createIndexJob.waitForCompletion(true);
         createTFIDFjob.waitForCompletion(true);
     }
 }
