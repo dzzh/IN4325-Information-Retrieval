@@ -43,7 +43,7 @@ public class QueryParser {
 	 *         where the key is a query term and the value number of occurrences
 	 *         of the term in the particular query.
 	 */
-	public Map<String, Map<String, Integer>> parseQuery(String queryFilePath) {
+	public Map<String, Map<String, Integer>> parseQueries(String queryFilePath) {
 
 		Map<String, Map<String, Integer>> queries = new HashMap<String, Map<String, Integer>>();
 

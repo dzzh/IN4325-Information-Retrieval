@@ -1,7 +1,6 @@
 package nl.tudelft.in4325.a2.tfidf;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import nl.tudelft.in4325.ConfigurationHelper;
@@ -25,7 +24,7 @@ public class TFIDFMapper extends Mapper<Object, Text, Text, Text> {
         String type = appConfig.getString("normalization-type");
         NormalizationType normalizationType = NormalizationType.getNormalizationType(type);
         String queriesFile = appConfig.getString(platform + "-queries-file");
-        queries = new QueryParser(normalizationType.getNormalizer()).parseQuery(queriesFile);
+        queries = new QueryParser(normalizationType.getNormalizer()).parseQueries(queriesFile);
 	}
 	
 	public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
@@ -34,7 +33,7 @@ public class TFIDFMapper extends Mapper<Object, Text, Text, Text> {
 
 		String word = stringValue.substring(0, stringValue.indexOf("\t")).trim();
 
-		Map<String, Integer> docNumberOfOccurrences = wordIndexExtractor.extractWordFrequencies(stringValue);
+		Map<Integer, Integer> docNumberOfOccurrences = wordIndexExtractor.extractWordFrequencies(stringValue);
 
 		for (String query : queries.keySet()) {
 			if (queries.get(query).keySet().contains(word)) {
@@ -45,14 +44,14 @@ public class TFIDFMapper extends Mapper<Object, Text, Text, Text> {
 				// calculate the TF.IDF of the query term
 				double queryTFIDF = queries.get(query).get(word) * wordIDF;
 
-				for (String doc : docNumberOfOccurrences.keySet()) {
+				for (Integer docId : docNumberOfOccurrences.keySet()) {
 
 					// calculate the TF.IDF of the document term
-					double documentTFIDF = calculateTFIDF(docNumberOfOccurrences.get(doc), wordIDF);
+					double documentTFIDF = calculateTFIDF(docNumberOfOccurrences.get(docId), wordIDF);
 
 					if (documentTFIDF != 0) {
 						context.write(new Text(query), new Text(word + ","
-								+ doc + "," + documentTFIDF + "," + queryTFIDF));
+								+ docId + "," + documentTFIDF + "," + queryTFIDF));
 					}
 				}
 			}

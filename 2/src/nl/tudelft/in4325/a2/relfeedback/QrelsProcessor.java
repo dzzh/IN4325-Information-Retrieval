@@ -1,7 +1,6 @@
 package nl.tudelft.in4325.a2.relfeedback;
 
 import nl.tudelft.in4325.ConfigurationHelper;
-import nl.tudelft.in4325.Constants;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,19 +10,16 @@ import org.apache.hadoop.fs.Path;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOError;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class QrelsProcessor {
     
     private static final Log LOGGER = LogFactory.getLog(QrelsProcessor.class);
     
     private Map<String, List<Integer>> relevance;
-    private Map<String, List<Integer>> firstRunResults;
+    private Map<String, List<DocScore>> firstRunResults;
+    private int topRetrievedDocs;
 
     FileSystem fs = null;
     
@@ -32,6 +28,8 @@ public class QrelsProcessor {
         String platform = appConfig.getString("target-platform");
         String qrelsFile = appConfig.getString(platform + "-qrels-file");
         String firstRunFile = appConfig.getString(platform + "-first-run-file");
+        topRetrievedDocs = appConfig.getInt("rocchio-top-retrieved-docs");
+        
         relevance = getRelevance(qrelsFile);
 
         try{
@@ -47,12 +45,20 @@ public class QrelsProcessor {
     public List<QueryRelevance> getQueriesRelevance(){
         List<QueryRelevance> queryRelevances = new LinkedList<QueryRelevance>();
         for (String queryId : firstRunResults.keySet()){
-            List<Integer> firstRunDocIds = firstRunResults.get(queryId);
-            List<Integer> relvanceDocIds = relevance.get(queryId);
+            List<DocScore> firstRunDocIds = firstRunResults.get(queryId);
+            List<Integer> relevanceDocIds = relevance.get(queryId);
             QueryRelevance qr = new QueryRelevance(queryId);
             queryRelevances.add(qr);
-            for (int docId : firstRunDocIds){
-                if (relvanceDocIds.contains(docId)){
+            for (DocScore docScore : firstRunDocIds){
+                int docId = docScore.getDocId();
+                boolean found = false;
+                for (Integer docScore1 : relevanceDocIds){
+                    if (docId == docScore1){
+                        found = true;
+                        break;
+                    }
+                }
+                if (found){
                     qr.addRelevantDocument(docId);
                 } else {
                     qr.addIrrelevantDocument(docId);
@@ -84,8 +90,8 @@ public class QrelsProcessor {
         return result;
     }
     
-    private Map<String, List<Integer>> getFirstRunResults(String firstRunFile){
-        Map<String, List<Integer>> result = new HashMap<String, List<Integer>>();
+    private Map<String, List<DocScore>> getFirstRunResults(String firstRunFile){
+        Map<String, List<DocScore>> result = new HashMap<String, List<DocScore>>();
         Path inFile = new Path(firstRunFile);
         try{
             if (!fs.exists(inFile)){
@@ -93,14 +99,27 @@ public class QrelsProcessor {
                 return null;
             }
 
+            //reading data from file
             FSDataInputStream in = fs.open(inFile);
-            String strLine = null;
+            String strLine;
             while ((strLine = in.readLine()) != null){
                 String[] data = strLine.split("\t");
                 if (result.get(data[0]) == null){
-                    result.put(data[0], new LinkedList<Integer>());
+                    result.put(data[0], new LinkedList<DocScore>());
                 }
-                result.get(data[0]).add(Integer.valueOf(data[1].split(" ")[0]));
+                String[] docData = data[1].split(" ");
+                int docId = Integer.valueOf(docData[0]);
+                double score = Double.valueOf(docData[1]);
+                result.get(data[0]).add(new DocScore(docId, score));
+            }
+
+            //sorting and leaving only N top results
+            for (String queryId : result.keySet()){
+                List<DocScore> docScores = result.get(queryId);
+                Collections.sort(docScores, new DocScore.DocScoreComparatorByScore());
+                if (docScores.size() > topRetrievedDocs){
+                    result.put(queryId, docScores.subList(0, topRetrievedDocs));
+                }
             }
             
             return result;
@@ -110,4 +129,5 @@ public class QrelsProcessor {
             return null;
         }
     }
+
 }

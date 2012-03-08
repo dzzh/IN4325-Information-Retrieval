@@ -2,8 +2,6 @@ package nl.tudelft.in4325.a2.relfeedback;
 
 import nl.tudelft.in4325.ConfigurationHelper;
 import nl.tudelft.in4325.Constants;
-import nl.tudelft.in4325.a2.tfidf.TFIDFMapper;
-import nl.tudelft.in4325.a2.tfidf.TFIDFReducer;
 import org.apache.commons.configuration.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
