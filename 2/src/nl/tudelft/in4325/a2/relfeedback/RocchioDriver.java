@@ -2,7 +2,6 @@ package nl.tudelft.in4325.a2.relfeedback;
 
 import nl.tudelft.in4325.ConfigurationHelper;
 import nl.tudelft.in4325.Constants;
-import org.apache.commons.configuration.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
@@ -14,10 +13,10 @@ public class RocchioDriver {
 
     public static void main(String[] args) throws Exception {
 
-        Configuration appConfig = new ConfigurationHelper().getConfiguration();
+        ConfigurationHelper appConfig = new ConfigurationHelper();
 
-        String input = appConfig.getString("word-level-index-output");
-        String output = appConfig.getString("rocchio-output");
+        String input = appConfig.getPathDependentString("word-level-index-output");
+        String output = appConfig.getPathDependentString("rocchio-output");
 
         // configuring Hadoop and running the job
         org.apache.hadoop.conf.Configuration hadoopConfig = new org.apache.hadoop.conf.Configuration();

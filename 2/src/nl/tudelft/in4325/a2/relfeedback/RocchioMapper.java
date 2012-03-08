@@ -5,7 +5,6 @@ import nl.tudelft.in4325.Constants;
 import nl.tudelft.in4325.a1.normalization.NormalizationType;
 import nl.tudelft.in4325.a2.utils.QueryParser;
 import nl.tudelft.in4325.a2.utils.WordIndexExtractor;
-import org.apache.commons.configuration.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.io.Text;
@@ -30,12 +29,11 @@ public class RocchioMapper extends Mapper<Object, Text, Text, Text> {
 	private final List<QueryRelevance> queryRelevances = new QrelsProcessor().getQueriesRelevance();
     
     public RocchioMapper() {
-        Configuration appConfig = new ConfigurationHelper().getConfiguration();
-        String platform = appConfig.getString("target-platform");
-        numberOfDocuments = Integer.valueOf(appConfig.getString(platform + "-number-of-documents"));
+        ConfigurationHelper appConfig = new ConfigurationHelper();
+        numberOfDocuments = Integer.valueOf(appConfig.getPlatformDependentString("number-of-documents"));
         String type = appConfig.getString("normalization-type");
         NormalizationType normalizationType = NormalizationType.getNormalizationType(type);
-        String queriesFile = appConfig.getString(platform + "-queries-file");
+        String queriesFile = appConfig.getPlatformDependentString("queries-file");
         queries = new QueryParser(normalizationType.getNormalizer()).parseQueries(queriesFile);
     }
 
@@ -69,8 +67,6 @@ public class RocchioMapper extends Mapper<Object, Text, Text, Text> {
                                     Map<String, Integer> query, QueryRelevance relevance,
                                     Context context) throws IOException, InterruptedException{
         
-        double score = 0;
-
         double termIDF = Math.log(numberOfDocuments / termDocs.size());
         double queryScore = 0;
         double positiveDocScore = 0;
@@ -101,7 +97,7 @@ public class RocchioMapper extends Mapper<Object, Text, Text, Text> {
         }
         negativeDocScore *= -1 * GAMMA;
 
-        score = queryScore + positiveDocScore + negativeDocScore;
+        double score = queryScore + positiveDocScore + negativeDocScore;
 
         if (score > 0){
             int querySize = queries.get(queryId).size();

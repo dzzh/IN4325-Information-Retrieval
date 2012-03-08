@@ -4,8 +4,6 @@ import nl.tudelft.in4325.ConfigurationHelper;
 import nl.tudelft.in4325.Constants;
 import nl.tudelft.in4325.a1.normalization.NormalizationMapper;
 import nl.tudelft.in4325.a1.utils.XmlInputFormat;
-
-import org.apache.commons.configuration.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
@@ -17,10 +15,10 @@ public class DocLevelIndexDriver {
 	
 	public static void main(String[] args) throws Exception{
 
-        Configuration appConfig = new ConfigurationHelper().getConfiguration();
+        ConfigurationHelper appConfig = new ConfigurationHelper();
 
-		String input = appConfig.getString("source-input");
-		String output = appConfig.getString("doc-level-index-output");
+		String input = appConfig.getPlatformDependentString("source-input");
+		String output = appConfig.getPathDependentString("doc-level-index-output");
 
 		//configuring Hadoop and running the job
 		org.apache.hadoop.conf.Configuration hadoopConfig = new org.apache.hadoop.conf.Configuration();

@@ -9,13 +9,6 @@
 \date{\today}
 \maketitle
 
-\section{Reports}
-Submitted source code is compatible with Hadoop 0.20.2. To parse input data, \lstinline{XmlInputFormat} was used. However, the suggested version caused problems because of incompatibility with our Hadoop distribution and we had to substitute it with a compatible one\footnote{http://xmlandhadoop.blogspot.com}.
-
-To support our algorithms, we have used the following third-party libraries: Apache Commons\footnote{http://commons.apache.org} Lang and Apache Commons Configuration for basic setup, Java Wikipedia API (Bliki)\footnote{http://code.google.com/p/gwtwiki/} to remove Wikipedia markup from processed texts, Jsoup\footnote{http://jsoup.org/} to remove HTML markup and a reference implementation of Porter2 stemming algorithm\footnote{http://snowball.tartarus.org/dist/libstemmer\_java.tgz}.
-
-Organisation of HDFS folders is described in \emph{conf/conf.default.ini} configuration file.
-
 \section{Vector space model}
 In this part of the assignment we implemented the vector space model for retrieval with standard TF.IDF weighting. As an input we used the indexes from Assignment 1. The output is for each query the top 10 documents that have the highest score. In order to achieve that we have broken down the task into two subtasks:
 

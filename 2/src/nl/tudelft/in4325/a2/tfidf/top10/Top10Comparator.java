@@ -1,7 +1,6 @@
 package nl.tudelft.in4325.a2.tfidf.top10;
 
 import nl.tudelft.in4325.Constants;
-
 import org.apache.hadoop.io.RawComparator;
 import org.apache.hadoop.io.Text;
 

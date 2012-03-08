@@ -2,7 +2,6 @@ package nl.tudelft.in4325.a2.relfeedback;
 
 import nl.tudelft.in4325.ConfigurationHelper;
 import nl.tudelft.in4325.Constants;
-import org.apache.commons.configuration.Configuration;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
@@ -17,7 +16,7 @@ public class RocchioReducer extends Reducer<Text,Text,Text,Text> {
     private int termsToadd;
     
 	public RocchioReducer(){
-        Configuration appConfig = new ConfigurationHelper().getConfiguration();
+        ConfigurationHelper appConfig = new ConfigurationHelper();
         termsToadd = appConfig.getInt("rocchio-add-terms");
 	}
 	
@@ -33,7 +32,7 @@ public class RocchioReducer extends Reducer<Text,Text,Text,Text> {
         String modifiedQuery = "";
         
         for (TermScore ts : scores){
-            modifiedQuery += ts.getTerm() + "[" + ts.getScore() + "]" + " ";
+            modifiedQuery += ts.getTerm() + " ";
         }
         modifiedQuery = modifiedQuery.trim();
         

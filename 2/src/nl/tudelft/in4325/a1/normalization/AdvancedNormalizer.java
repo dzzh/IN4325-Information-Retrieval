@@ -2,12 +2,11 @@ package nl.tudelft.in4325.a1.normalization;
 
 import info.bliki.wiki.filter.PlainTextConverter;
 import info.bliki.wiki.model.WikiModel;
-
-import java.util.*;
-
 import org.jsoup.Jsoup;
 import org.tartarus.snowball.SnowballStemmer;
 import org.tartarus.snowball.ext.englishStemmer;
+
+import java.util.*;
 
 /**
  * Advanced implementation of {@link Normalizer}.

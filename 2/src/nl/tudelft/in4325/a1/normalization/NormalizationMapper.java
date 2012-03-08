@@ -1,12 +1,7 @@
 package nl.tudelft.in4325.a1.normalization;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
 import nl.tudelft.in4325.ConfigurationHelper;
 import nl.tudelft.in4325.a1.indexing.TextArrayWritable;
-
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.io.Text;
@@ -14,6 +9,10 @@ import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Normalizes corpus of XML documents.

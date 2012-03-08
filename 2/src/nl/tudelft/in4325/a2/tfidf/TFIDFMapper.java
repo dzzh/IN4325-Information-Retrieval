@@ -1,15 +1,14 @@
 package nl.tudelft.in4325.a2.tfidf;
 
-import java.io.IOException;
-import java.util.Map;
-
 import nl.tudelft.in4325.ConfigurationHelper;
 import nl.tudelft.in4325.a1.normalization.NormalizationType;
 import nl.tudelft.in4325.a2.utils.QueryParser;
 import nl.tudelft.in4325.a2.utils.WordIndexExtractor;
-import org.apache.commons.configuration.Configuration;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
+
+import java.io.IOException;
+import java.util.Map;
 
 public class TFIDFMapper extends Mapper<Object, Text, Text, Text> {
 
@@ -18,12 +17,11 @@ public class TFIDFMapper extends Mapper<Object, Text, Text, Text> {
     private final WordIndexExtractor wordIndexExtractor = new WordIndexExtractor();
 
 	public TFIDFMapper(){
-		Configuration appConfig = new ConfigurationHelper().getConfiguration();
-        String platform = appConfig.getString("target-platform");
-		numberOfDocuments = Integer.valueOf(appConfig.getString(platform + "-number-of-documents"));
+		ConfigurationHelper appConfig = new ConfigurationHelper();
+		numberOfDocuments = Integer.valueOf(appConfig.getPlatformDependentString("number-of-documents"));
         String type = appConfig.getString("normalization-type");
         NormalizationType normalizationType = NormalizationType.getNormalizationType(type);
-        String queriesFile = appConfig.getString(platform + "-queries-file");
+        String queriesFile = appConfig.getPlatformDependentString("queries-file");
         queries = new QueryParser(normalizationType.getNormalizer()).parseQueries(queriesFile);
 	}
 	

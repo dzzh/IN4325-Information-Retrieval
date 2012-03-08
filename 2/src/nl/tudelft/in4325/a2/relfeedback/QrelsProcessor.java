@@ -1,7 +1,6 @@
 package nl.tudelft.in4325.a2.relfeedback;
 
 import nl.tudelft.in4325.ConfigurationHelper;
-import org.apache.commons.configuration.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -24,10 +23,9 @@ public class QrelsProcessor {
     FileSystem fs = null;
     
     public QrelsProcessor(){
-        Configuration appConfig = new ConfigurationHelper().getConfiguration();
-        String platform = appConfig.getString("target-platform");
-        String qrelsFile = appConfig.getString(platform + "-qrels-file");
-        String firstRunFile = appConfig.getString(platform + "-first-run-file");
+        ConfigurationHelper appConfig = new ConfigurationHelper();
+        String qrelsFile = appConfig.getPlatformDependentString("qrels-file");
+        String firstRunFile = appConfig.getPathDependentString("first-run-file");
         topRetrievedDocs = appConfig.getInt("rocchio-top-retrieved-docs");
         
         relevance = getRelevance(qrelsFile);
@@ -64,12 +62,6 @@ public class QrelsProcessor {
                     qr.addIrrelevantDocument(docId);
                 }
             }
-        }
-        
-        for (QueryRelevance qr : queryRelevances){
-        	if (qr.getQueryId().equals("104-1")){
-        		LOGGER.info(qr.getIrrelevantDocuments());
-        	}
         }
         
         return queryRelevances;

@@ -1,12 +1,12 @@
 package nl.tudelft.in4325.a1.indexing;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.TreeMap;
-
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Reducer;
+
+import java.io.IOException;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Builds word-level inverted index file based on (word, document id + term positions) pairs.

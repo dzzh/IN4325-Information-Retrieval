@@ -1,12 +1,11 @@
 package nl.tudelft.in4325.a1.normalization;
 
-import java.io.IOException;
-
 import nl.tudelft.in4325.a1.indexing.TextArrayWritable;
-
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
+
+import java.io.IOException;
 
 /**
  * Reducer for Wikipedia XML corpus normalization

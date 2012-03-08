@@ -1,13 +1,12 @@
 package nl.tudelft.in4325.a2.tfidf.top10;
 
+import nl.tudelft.in4325.Constants;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Reducer;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import nl.tudelft.in4325.Constants;
-
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Reducer;
 
 /**
  * Reducer to generate report with the documents that scored higher for each query.

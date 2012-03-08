@@ -1,11 +1,10 @@
 package nl.tudelft.in4325.a2.tfidf.top10;
 
-import java.io.IOException;
-
 import nl.tudelft.in4325.Constants;
-
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
+
+import java.io.IOException;
 
 /**
  * Mapper to retrieve the calculated document scores for each query.

@@ -1,11 +1,7 @@
 package nl.tudelft.in4325.a2.tfidf.top10;
 
-import java.io.File;
-
+import nl.tudelft.in4325.ConfigurationHelper;
 import nl.tudelft.in4325.Constants;
-
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
@@ -20,17 +16,9 @@ public class Top10Driver {
 
 	public static void main(String[] args) throws Exception {
 
-		// reading input and output paths from configuration file
-		String propertiesPath = Constants.DEFAULT_PROPERTIES_FILE;
-
-		if (new File(Constants.PROPERTIES_FILE).exists()) {
-			propertiesPath = Constants.PROPERTIES_FILE;
-		}
-
-		Configuration propertiesConfig = null;
-		propertiesConfig = new PropertiesConfiguration(propertiesPath);
-		String input = propertiesConfig.getString("tf-idf-output");
-		String output = propertiesConfig.getString("top10-output");
+		ConfigurationHelper appConfig = new ConfigurationHelper();
+		String input = appConfig.getPathDependentString("tf-idf-output");
+		String output = appConfig.getPathDependentString("top10-output");
 
 		// configuring Hadoop and running the jobs
 		org.apache.hadoop.conf.Configuration hadoopConfig = new org.apache.hadoop.conf.Configuration();
