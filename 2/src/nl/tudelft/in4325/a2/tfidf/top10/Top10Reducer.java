@@ -16,6 +16,7 @@ public class Top10Reducer extends Reducer<Text, Text, Text, Text>{
 	
 	private static final int PRECISION = 10;
 	
+	//FIXME workaround. The problem is that Top10GroupingComparator fails to group the keys correctly.
 	private Map<String, Integer> num = new HashMap<String, Integer>();
 	
 	public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException{
