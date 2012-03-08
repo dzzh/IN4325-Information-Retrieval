@@ -19,8 +19,8 @@ public class Top10Mapper extends Mapper<Object, Text, Text, Text> {
 			throws IOException, InterruptedException {
 		String[] values = value.toString().split("\\s");
 
-		word.set(values[0] + Constants.FIELD_SEPARATOR + values[2]);
-		context.write(word, new Text(values[1]));
+		word.set(values[0].trim() + Constants.FIELD_SEPARATOR + values[2].trim());
+		context.write(word, new Text(values[1].trim()));
 
 	}
 }

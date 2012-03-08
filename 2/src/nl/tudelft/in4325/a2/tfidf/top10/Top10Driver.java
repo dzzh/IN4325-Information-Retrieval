@@ -40,11 +40,13 @@ public class Top10Driver {
 				Constants.Jobs.NORMALIZATION_REPORT_FREQUENCY.toString());
 		job.setJarByClass(Top10Driver.class);
 		job.setMapperClass(Top10Mapper.class);
+		job.setReducerClass(Top10Reducer.class);
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(Text.class);
-		job.setSortComparatorClass(Top10Comparator.class);
+		//job.setGroupingComparatorClass(Top10GroupingComparator.class);
+		job.setSortComparatorClass(Top10SortComparator.class);
 		job.setPartitionerClass(Top10Partitioner.class);
-		job.setReducerClass(Top10Reducer.class);
+		
 
 		FileInputFormat.addInputPath(job, new Path(input));
 		Path outputPath = new Path(output);

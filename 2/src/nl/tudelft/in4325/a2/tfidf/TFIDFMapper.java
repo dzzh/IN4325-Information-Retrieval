@@ -52,8 +52,7 @@ public class TFIDFMapper extends Mapper<Object, Text, Text, Text> {
 					double documentTFIDF = calculateTFIDF(docNumberOfOccurrences.get(doc), wordIDF);
 
 					if (documentTFIDF != 0) {
-						context.write(new Text(query), new Text(word + ","
-								+ doc + "," + documentTFIDF + "," + queryTFIDF));
+						context.write(new Text(query), new Text(doc + "," + documentTFIDF + "," + queryTFIDF));
 					}
 				}
 			}
