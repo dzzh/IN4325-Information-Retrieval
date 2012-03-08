@@ -11,7 +11,7 @@ import org.apache.hadoop.mapreduce.Partitioner;
 public class Top10Partitioner extends Partitioner<Text, Text> {
 
 	public int getPartition(Text key, Text value, int numPartitions) {
-		String qID = key.toString().split(Constants.FIELD_SEPARATOR)[0];
+		String qID = key.toString().split(Constants.FIELD_SEPARATOR)[0].trim();
 		return qID.hashCode() % numPartitions;
 	}
 

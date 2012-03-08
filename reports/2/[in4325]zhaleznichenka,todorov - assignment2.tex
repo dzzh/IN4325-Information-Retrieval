@@ -9,14 +9,52 @@
 \date{\today}
 \maketitle
 
-\section{Setup}
-
-\section{Vector space model with TF-IDF weighting}
-
-\section{Sublinear TF-IDF weighting}
-
-\section{Implementation of relevance feedback with Rocchio algorithm}
-
 \section{Reports}
+Submitted source code is compatible with Hadoop 0.20.2. To parse input data, \lstinline{XmlInputFormat} was used. However, the suggested version caused problems because of incompatibility with our Hadoop distribution and we had to substitute it with a compatible one\footnote{http://xmlandhadoop.blogspot.com}.
+
+To support our algorithms, we have used the following third-party libraries: Apache Commons\footnote{http://commons.apache.org} Lang and Apache Commons Configuration for basic setup, Java Wikipedia API (Bliki)\footnote{http://code.google.com/p/gwtwiki/} to remove Wikipedia markup from processed texts, Jsoup\footnote{http://jsoup.org/} to remove HTML markup and a reference implementation of Porter2 stemming algorithm\footnote{http://snowball.tartarus.org/dist/libstemmer\_java.tgz}.
+
+Organisation of HDFS folders is described in \emph{conf/conf.default.ini} configuration file.
+
+\section{Vector space model}
+In this part of the assignment we implemented the vector space model for retrieval with standard TF.IDF weighting. As an input we used the indexes from Assignment 1. The output is for each query the top 10 documents that have the highest score. In order to achieve that we have broken down the task into two subtasks:
+
+Fist, we calculate the level of similarity(score) between all documents and queries. The program logic is distributed in the following components.
+
+\begin{itemize}
+	\item Job (\lstinline{TFIDFDriver}) - Configures and submits the job that is responsible for calculating the document's scores.
+	\item Mapper (\lstinline{TFIDFMapper}) - For each term in the queries calculates its tf.idf weight in the documents and its tf.idf weight in the query. In produces the following tuples: (query id, document id, documentTFIDF, queryTFIDF)
+	\item Reducer (\lstinline{TFIDFReducer}) - Builds the scores that each document scores against a query. The output are the following tuples: "query id, document id, score"  
+\end{itemize}
+
+Second, based on the scores calculated in the previous subtask we choose the top 10 documents for each query. The program logic is distributed in the following components.
+
+\begin{itemize}
+	\item Job (\lstinline{Top10Driver}) - Configures and submits the job that is responsible for choosing the top 10 documents for each query.
+	\item Mapper (\lstinline{Top10Mapper}) - Parses the output from the TFIDFDriver job. Produces the following tuples: (query id:score, document id)
+	\item Reducer (\lstinline{Top10Reducer}) - Provides the top 10 documents for each query. The output format is: ([queryID] [Q0] [docid] [rank] [score] [Exp])
+  
+	\item Reducer (\lstinline{Top10Partitioner}) - Makes sure that tuples with the same query id will go to the same reducers.
+	
+	\item Reducer (\lstinline{Top10SortComparator}) - Sorts the tuples according to their scores in order to arrive sorted in the reducer.
+	
+	\item Reducer (\lstinline{Top10GroupingComparator}) - Makes sure that tuples with the same query id are sent in the same call to reducer.
+	
+\end{itemize}
+
+The table bellow shows the results from the measurements of the mean average precision. All tests are performed with the "Assignment 2 test queries".
+\begin{center}
+	\begin{tabular}{ | l | l | }
+    	\hline
+     & MAP\\ \hline
+    Normalized AWS & 12  \\ \hline
+    \hline
+    \end{tabular}
+\end{center}
+
+\section{Term weighting adaptation}
+In this part of the assignment we implemented the term weight normalization approach called "Sublinear tf scaling". The term weight is calculated as \emph{1 + log(tf))}. The idea is that the fact that a term has ten occurrences in a document does not necessary mean that it has ten times the significance of a single occurrence. In the source code the difference with the previous method is the mapper(SublinearTFIDFMapper) which implements the new algorithm for calculating term weights.
+
+We didn't observed any significant change in performance. This was expected since the algorithm is similar in complexity.
 
 \end{document}
