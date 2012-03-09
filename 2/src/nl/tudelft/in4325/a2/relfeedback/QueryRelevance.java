@@ -3,6 +3,9 @@ package nl.tudelft.in4325.a2.relfeedback;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Data class to keep references to relevant and irrelevant documents for certain queries
+ */
 public class QueryRelevance {
     
     private String queryId;

@@ -11,6 +11,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Hadoop reducer for Rocchio relevance feedback computations
+ */
 public class RocchioReducer extends Reducer<Text,Text,Text,Text> {
 
     private int termsToadd;
@@ -19,7 +22,15 @@ public class RocchioReducer extends Reducer<Text,Text,Text,Text> {
         ConfigurationHelper appConfig = new ConfigurationHelper();
         termsToadd = appConfig.getInt("rocchio-add-terms");
 	}
-	
+
+    /**
+     * Generates a modified query based on the scores provided by the {@link RocchioMapper}
+     * @param key in format queryId:querySize
+     * @param values in format term:score
+     * @param context Hadoop context
+     * @throws IOException
+     * @throws InterruptedException
+     */
     public void reduce(Text key, Iterable<Text> values, Context context)
             throws IOException, InterruptedException {
         

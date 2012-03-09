@@ -25,7 +25,7 @@ public class RocchioDriver {
         // GenericOptionsParser(hadoopConfig,args).getRemainingArgs();
 
         // Create TF.IDF vector space
-        Job createTFIDFjob = new Job(hadoopConfig, Constants.Jobs.TFIDF.name());
+        Job createTFIDFjob = new Job(hadoopConfig, Constants.Jobs.ROCCHIO.name());
         createTFIDFjob.setJarByClass(RocchioDriver.class);
         createTFIDFjob.setMapperClass(RocchioMapper.class);
         createTFIDFjob.setReducerClass(RocchioReducer.class);

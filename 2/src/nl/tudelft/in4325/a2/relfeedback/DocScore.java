@@ -2,6 +2,9 @@ package nl.tudelft.in4325.a2.relfeedback;
 
 import java.util.Comparator;
 
+/**
+ * A simple data class to keep document ID to its TF.IDF weight correspondence
+ */
 public class DocScore {
     
     private int docId;

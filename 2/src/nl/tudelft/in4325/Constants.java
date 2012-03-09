@@ -5,7 +5,7 @@ package nl.tudelft.in4325;
  */
 public final class Constants {
 	public static final String PROPERTIES_FILE = "conf/conf.ini";
-	public static final String DEFAULT_PROPERTIES_FILE = "conf/conf.default.ini";
+	public static final String DEFAULT_PROPERTIES_FILE = "conf/conf.ini";
 	public static final String STOPWORDS_FILE = "conf/stopwords.txt";
 
 	public static final String FIELD_SEPARATOR = ":";
@@ -21,6 +21,7 @@ public final class Constants {
 		NORMALIZATION_REPORT_FREQUENCY,
 		INVERTED_INDEXING,
 		TFIDF,
+		ROCCHIO,
 		TOP10
 	}
 
