@@ -10,53 +10,51 @@
 \maketitle
 
 \section{Vector space model}
-In this part of the assignment we implemented the vector space model for retrieval with standard TF.IDF weighting. We used word-level inverted index from assignment 1 as input data. The output for each query presents top 10 documents that have the highest TF.IDF weight. The task was split into two subtasks.
+We have implemented the vector space model for text search with standard TF.IDF weighting. We used word-level inverted index from assignment 1 as input data. The output for each query presents top 10 documents that have the highest TF.IDF weight. The task was split into two subtasks.
 
-Fist, we calculated the level of similarity (score) between all documents and queries. The program logic is distributed in the following components.
+At fist, we calculated the level of similarity (score) between all documents and queries. The program logic is distributed in the following components.
 
 \begin{itemize}
 	\item Job (\lstinline{TFIDFDriver}) - Configures and submits the job that is responsible for calculating the document's scores.
-	\item Mapper (\lstinline{TFIDFMapper}) - For each term in the index  calculates its tf.idf weight for all the documents and queries where it is presented. It maps query id to the following string: term, documentId, documentTFIDF, queryTFIDF.
-	\item Reducer (\lstinline{TFIDFReducer}) - Builds the scores for each document against a query. It emits query id as the key and a pair (documentId, score) as the value. 
+	\item Mapper (\lstinline{TFIDFMapper}) - For each term in the index  calculates its TF.IDF weight for all the documents and queries where it is presented. It maps query id to the (term; documentId; documentTFIDF; queryTFIDF) tuple.
+	\item Reducer (\lstinline{TFIDFReducer}) - Computes the scores for each document against a query. It emits query id as the key and a tuple (documentId; score) as the value. 
 \end{itemize}
 
-Second, based on the scores calculated in the previous subtask we choose the top 10 documents for each query. The program logic is distributed in the following components.
+Then we have selected top 10 documents for each query based on the scores calculated in the previous subtask. The job logic is distributed between the following components.
 
 \begin{itemize}
 	\item Job (\lstinline{Top10Driver}) - Configures and submits the job that is responsible for choosing the top 10 documents for each query.
 	\item Mapper (\lstinline{Top10Mapper}) - Parses the output from the TFIDFDriver job. Produces the following tuples: (query id:score, document id)
 	\item Reducer (\lstinline{Top10Reducer}) - Provides the top 10 documents for each query. The output format is: ([queryID] [Q0] [docid] [rank] [score] [Exp])
   
-	\item Reducer (\lstinline{Top10Partitioner}) - Makes sure that tuples with the same query id will go to the same reducers.
+	\item Partitioner (\lstinline{Top10Partitioner}) - Makes sure that tuples with the same query id will go to the same reducers.
 	
-	\item Reducer (\lstinline{Top10SortComparator}) - Sorts the tuples according to their scores in order to arrive sorted in the reducer.
+	\item Comparator (\lstinline{Top10SortComparator}) - Sorts the tuples according to their scores in order to arrive sorted to the reducer.
 	
-	\item Reducer (\lstinline{Top10GroupingComparator}) - Makes sure that tuples with the same query id are sent in the same call to reducer.
+	\item Comparator (\lstinline{Top10GroupingComparator}) - Makes sure that tuples with the same query id are sent in the same call to reducer.
 	
 \end{itemize}
 
-Here are the performance measurements.
-
-\begin{center}
-	\begin{tabular}{ | l | l | l |}\hline \emph{Setup} & \emph{P10} & \emph{MAP}\\ \hline
-    Small corpus, tokenization & 0 & 0 \\ \hline
-    Small corpus, advanced normalization & 0.0063 & 0.0104 \\ \hline
-    \end{tabular}
-\end{center}
+%Here are the performance measurements.
+%
+%\begin{center}
+%	\begin{tabular}{ | l | l | l |}\hline \emph{Setup} & \emph{P10} & \emph{MAP}\\ \hline
+%    Small corpus, tokenization & 0 & 0 \\ \hline
+%    Small corpus, advanced normalization & 0.0063 & 0.0104 \\ \hline
+%    \end{tabular}
+%\end{center}
 
 \section{Term weighting adaptation}
-In this part of the assignment we implemented the term weight normalization approach called "Sublinear tf scaling". The term weight is calculated as \emph{1 + log(tf))}. The idea is that if a term has 10 occurrences in a document this does not necessary mean that it has 10 times the significance of a single occurrence. In the source code the difference with the previous method is the mapper(\lstinline{SublinearTFIDFMapper}) which implements the new algorithm for calculating term weights.
+We have implemented the term weight normalization approach called "Sublinear tf scaling". The term weight is calculated as \emph{1 + log(tf))}. The idea is that if a term has 10 occurrences in a document this does not necessary mean that it has 10 times the significance of a single occurrence. In the source code the difference with the previous method is the mapper(\lstinline{SublinearTFIDFMapper}) which implements the new algorithm for calculating term weights.
 
-Here are the performance measurements.
-
-\begin{center}
-	\begin{tabular}{ | l | l | l |}\hline \emph{Setup} & \emph{P10} & \emph{MAP}\\ \hline
-    Small corpus, tokenization & 0 & 0 \\ \hline
-    Small corpus, advanced normalization & 0.0063 & 0.0104 \\ \hline
-    \end{tabular}
-\end{center}
-
-We can see that sublinear tf scaling has same performance at our corpus.
+%Here are the performance measurements.
+%
+%\begin{center}
+%	\begin{tabular}{ | l | l | l |}\hline \emph{Setup} & \emph{P10} & \emph{MAP}\\ \hline
+%    Small corpus, tokenization & 0 & 0 \\ \hline
+%    Small corpus, advanced normalization & 0.0063 & 0.0104 \\ \hline
+%    \end{tabular}
+%\end{center}
 
 \section{Rocchio relevance feedback}
 
@@ -64,7 +62,7 @@ To find the most relevant documents using Rocchio relevance feedback mechanism, 
 
 The \lstinline{RocchioMapper} analysed the word-level inverted index, generated in assignment 1 and computed Rocchio score per each query. We took the following values for algorithm parameters: $\alpha=100$; $\beta=0.75$; $\gamma=0$. The reason to take such a huge $\alpha$-value was to make sure all the values from the original query will be retained in the modified one. Basically, this is not needed and the modified query may lack some of the terms specified in the original query (which was confirmed during the experiments). But it was required from us to add terms to the modified query, not to replace them. Thus, we decided to increase $\alpha$ to retain all the original terms.
 
-To compute Rocchio scores for the query, we need to know which documents from the initial run are considered to be relevant and irrelevant. To achieve this, we read the results of the first execution and query relevances and build sets of relevant and irrelevant documents per each query. $\beta$-score is computed only for terms occurring in relevant documents, $\gamma$-score is computed for terms from irrelevant documents. We took $\gamma$ equal to 0 to consider only the terms occurring in relevant documents.
+To compute Rocchio scores for the query, we need to know which documents from the initial run are considered to be relevant and irrelevant. To achieve this, we read the results of the first execution and query relevances and built sets of relevant and irrelevant documents per each query. $\beta$-score is computed only for terms occurring in relevant documents, $\gamma$-score is computed for terms from irrelevant documents. We took $\gamma$ equal to 0 to consider only the terms occurring in relevant documents.
 
 Rocchio score is computed separately per each query. The mapper emits (queryId; querySize) as the key and (term; score) as the value.
 
