@@ -11,6 +11,16 @@
 
 \section{Exercise 16.1}
 
+According to the \emph{Cluster hypothesis} "Documents in the same cluster behave similarly with respect to relevance to information needs". In this exercise we will show that this hypothesis does not hold for any notion of similarity.
+
+It is clear that the validity of the cluster hypothesis depends on the effectiveness of the clustering. In this exercise we define two documents as similar(they will end up in the same cluster) if they have at least two names in common. Bellow, you can find the contents of two sample documents which according to the criteria are similar and therefore will be clustered together.
+
+\begin{enumerate}
+	\item Barack Obama is the current president of USA. He has invited Nicolas Sarkozy to visit the White House.
+	\item Nicolas Sarkozy is the current president of France. He was invited on a visit by Barack Obama.
+\end{enumerate}
+
+Both documents have the names "Barack Obama" and "Nicolas Sarkozy" in their content. As a result, they are in the same cluster. Now suppose we want to retrieve the current president of a particular country, for example USA. In this case, it is clear that only the first document is relevant. However, this is against the cluster hypothesis because the two documents in the cluster do not have similar relevance according to the information needs. The conclusion is that the defined clustering criteria is not adequate for the information needs.
 
 \section{Exercise 16.2}
 
