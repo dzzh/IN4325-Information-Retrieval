@@ -1,5 +1,7 @@
 \documentclass[a4paper, notitlepage]{article}
 \usepackage{fullpage, listings, courier}
+\usepackage{float}
+\usepackage[pdftex]{graphicx}
 \lstset{language=Java,basicstyle=\small\ttfamily,commentstyle=\color{Gray},tabsize=4}
 
 \begin{document}
@@ -24,6 +26,15 @@ Both documents have the names "Barack Obama" and "Nicolas Sarkozy" in their cont
 
 \section{Exercise 16.2}
 
+In this exercise we will show that even though clustering can significantly speed up search, it can also sometimes be inexact and produce worse results compared to the direct nearest neighbour search. 
+
+The idea of the cluster-based search is to find the clusters that are closest to the query and only search through the documents from these clusters. Figure 1 shows an example clustering of documents. We have two clusters - green and red. The query is represented by a white circle. The green cluster is closer to the query but a document from the red cluster is the one with the best relevance for the query. If we use the cluster-based approach we will only look into the documents from the green cluster and we will end up with the green document closer to the query as the most relevant result. However, if we use the direct nearest neighbour search approach the result will be the red document closer to the query which indeed is the most relevant document. In this situation the direct nearest neighbour approach will produce a better result. The conclusion is that the cluster-based approach may in certain conditions be inexact and decrease the quality of the search.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[]{Clustering.png}
+	\caption{}
+\end{figure}
 
 \section{Exercise 16.3}
 
