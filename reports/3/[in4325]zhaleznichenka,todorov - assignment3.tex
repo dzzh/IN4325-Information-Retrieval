@@ -38,5 +38,22 @@ The idea of the cluster-based search is to find the clusters that are closest to
 
 \section{Exercise 16.3}
 
+It is generally more difficult to cluster 17 pairs of duplicate points than 17 different points. Two points in a pair are equal and will be placed in one cluster. All the other points will have great difference with the points in a pair and will most probably be assigned to other clusters. This may lead to the creation of 17 clusters each having a pair of duplicated points. To avoid this, which allow to set a restriction on K clustering algorithms should be employed. However, if having these algorithms, it is equally difficult to cluster 17 pairs of points as opposed to 17 distinct points. \newline
+
+\(purity(\Omega,C) = (1/34) * (10 + 8 + 6) \approx 0.71\) \newline
+
+\(NMI(\Omega, C) \approx \frac{0.3919}{|1.0951 * 1.0551| / 2} \approx 0.36\)\footnote{Computed automatically using a Python script. All the other computations were done with Wolfram Alpha.} \newline
+
+\(TP = 97, FP = 80, TN = 288, FN = 96\) \newline
+
+\(RI \approx 0.69 \) \newline
+
+\(P = \frac{97}{97 + 80} \approx 0.6862, R = \frac{97}{97 + 96} \approx 0.5026\) \newline
+
+\(F_{5} = \frac{26 * 0.6862 * 0.5026}{25*0.6862 + 0.5026} \approx 0.5078\) \newline
+
+It turned out that $F_{5}$ value increased, all the other values remained almost the same.
+
+According to the assessment and the measures, $F_5$ measure suits best to assess the quality of clusterings as it gives higher value to the clusterings with equal documents which is logical, because having such documents leads to better similarity between the documents within a cluster.
 
 \end{document}
