@@ -27,4 +27,26 @@ The host splitter should precede the Duplicate URL Eliminator block because the 
 
 However, if maintaining the local cache of URLs at the host splitter level we can decrease the amount of communication. In this case the cache will function as the local Duplicate URL Eliminator block but its functionality has to be duplicated on the remote side anyway. Also, if the bottleneck performance part of a host splitter is CPU, not network, the introduction of such a cache may lead to performance decrease so the performance measurements are needed to confirm the need in local URL cache and to tune the caching parameters.
 
+\section{Exercise 20.4}
+
+Section 20.4 of the book discusses an approach for encoding a row from the table of links in terms of the seven preceding rows. A 3 bit field (offset) is used in order to indicate that a row incorporates any preceding row. Using 3 bit field gives 8 ($2^3$) possible offsets(indicating 8 preceding rows). However, we need one value to indicate that a row is independent (does not incorporate any preceding rows) and therefore with 3 bit field we can specify as a prototype one of the 7 preceding rows. 
+
+\section{Exercise 20.5}
+
+The approach described in section 20.4 of the book significantly decreases the size of the web graph representation. However, it has a disadvantage. If you want to reconstruct an entry for a particular URL you also have to reconstruct recursively its prototype entry. This can lead to many levels of indirection. 
+
+Lets consider a web system where a user has to go through a sequence of steps(web pages) and at each step there are links for returning to any of the previous pages. The table of links could look like that:
+
+\emph{
+\\
+1:\\
+2: 1\\
+3: 1 2\\
+4: 1 2 3\\
+5: 1 2 3 4\\
+}
+
+In this case each entry will be prototyped by its predecessor. As a result, if we want to reconstruct the entry for document 5 we will also have to reconstruct all the previous entries in the table. In this example the number of levels of indirection grows linearly with the number of URLs.
+
+
 \end{document}
