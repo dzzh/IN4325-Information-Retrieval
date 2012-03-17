@@ -23,4 +23,8 @@ Thus, if one will partition the nodes of the distributed crawler by certain URLs
 
 \section{Exercise 20.2}
 
+The host splitter should precede the Duplicate URL Eliminator block because the survived URL submitted to the host splitter may belong to any of the partitioned crawler threads operating in parallel. The thread where the host splitter locates is aware only about the hosts within the range allocated to it. After we check the DNS record of the survived URL and make sure it should be directed to another thread, we have no cheap mechanism to check whether the URL is presented in the frontier of that thread. Thus, we send the URL to the responsible thread and the remote URL Eliminator checks whether it has a respective record in its database, which is a simple and a straightforward procedure.
+
+However, if maintaining the local cache of URLs at the host splitter level we can decrease the amount of communication. In this case the cache will function as the local Duplicate URL Eliminator block but its functionality has to be duplicated on the remote side anyway. Also, if the bottleneck performance part of a host splitter is CPU, not network, the introduction of such a cache may lead to performance decrease so the performance measurements are needed to confirm the need in local URL cache and to tune the caching parameters.
+
 \end{document}
