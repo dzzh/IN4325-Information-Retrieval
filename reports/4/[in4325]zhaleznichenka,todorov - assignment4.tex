@@ -1,0 +1,26 @@
+\documentclass[a4paper, notitlepage]{article}
+\usepackage{fullpage, listings, courier}
+\usepackage{float}
+\usepackage[pdftex]{graphicx}
+\lstset{language=html,basicstyle=\small\ttfamily,commentstyle=\color{Gray},tabsize=4}
+
+\begin{document}
+
+\title{IN4325 Information Retrieval, assignment 4}
+\author{Borislav Todorov (4181840) and Zmitser Zhaleznichenka (4134575)}
+\date{\today}
+\maketitle
+
+\section{Exercise 20.1}
+
+It is better to partition hosts rather than individual URLs between the nodes of a distributed crawl system as the host address usually has direct correspondence with the physical location of a host while the URLs may have nothing to do with it. 
+
+The distribution of IP addresses is managed by a non-profit organisation IANA which assigns each country certain pools of host addresses. Regional Internet Registries in these countries then allocate the addresses from the given pool to certain organisations and providers within the country. It is known which range of IP addresses is allocated to which region and having this information one can tune a distributed crawler to process only nearby hosts to decrease latency and avoid overlaps. 
+
+On the other hands, for URLs we cannot say in advance where the corresponding physical machine (cluster) is located for a number of reasons. First of all, there are international domains which are in use throughout the world, i.e. \lstinline{.com}, \lstinline{.org} and \lstinline{.net}. Secondly, most country code top-level domain registries allow its accredited registrars to sell the domains under their delegation to the residents of third countries. For example, it is possible to buy a domain in Belgian zone \lstinline{.be} while being an American resident and not planning to use it for mostly Belgian users and keep in Belgium (i.e. \lstinline{http://youtu.be}). Also, even if buying a domain in your national zone to host a website for the local community, it is sometimes better to keep a server abroad for the sake of savings, security and/or other reasons.
+
+Thus, if one will partition the nodes of the distributed crawler by certain URLs, all the nodes will end up crawling the servers all over the world that will lead to decreased performance as opposed to the hosts-based partitioning. 
+
+\section{Exercise 20.2}
+
+\end{document}
