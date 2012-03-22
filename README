@@ -1,0 +1,4 @@
+Labwork for IN4325 Information Retrieval course in TU Delft. First two assignments involve some Hadoop programming for Amazon EMR, the last ones are just answers to the questions. 
+Assignment 1 - normalisation and building of inverted document index for Wikipedia Simple English corpus.
+Assignment 2 - TD.IDF weighting and Rocchio algorithm for relevance feedback.
+More details concerning programming assignments can be found in reports/.
